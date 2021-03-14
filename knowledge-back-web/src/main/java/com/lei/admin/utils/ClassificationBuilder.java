@@ -1,0 +1,57 @@
+package com.lei.admin.utils;
+
+import com.lei.admin.vo.ClassificationNodeVO;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @Author LEI
+ * @Date 2021/2/25 23:10
+ * @Description TODO
+ */
+public class ClassificationBuilder {
+    public static List<ClassificationNodeVO> build(List<ClassificationNodeVO> nodes){
+        //根节点
+        List<ClassificationNodeVO> rootMenu = new ArrayList<>();
+        for (ClassificationNodeVO nav : nodes) {
+            if(nav.getParentId()==0){
+                rootMenu.add(nav);
+            }
+        }
+        /*为根菜单设置子菜单，getChild是递归调用的*/
+        for (ClassificationNodeVO nav : rootMenu) {
+            /* 获取根节点下的所有子节点 使用getChild方法*/
+            List<ClassificationNodeVO> childList = getChild(nav.getId(), nodes);
+            nav.setChildren(childList);//给根节点设置子节点
+        }
+        return rootMenu;
+    }
+
+    /**
+     * 获取子菜单
+     * @param id
+     * @param nodes
+     * @return
+     */
+    private static List<ClassificationNodeVO> getChild(Integer id, List<ClassificationNodeVO> nodes) {
+        //子菜单
+        List<ClassificationNodeVO> childList = new ArrayList<>();
+        for (ClassificationNodeVO nav : nodes) {
+            // 遍历所有节点，将所有菜单的父id与传过来的根节点的id比较
+            //相等说明：为该根节点的子节点。
+            if(nav.getParentId().equals(id)){
+                childList.add(nav);
+            }
+        }
+        //递归
+        for (ClassificationNodeVO nav : childList) {
+            nav.setChildren(getChild(nav.getId(), nodes));
+        }
+        //如果节点下没有子节点，返回一个空List（递归退出）
+        if(childList.size() == 0){
+            return new ArrayList<>();
+        }
+        return childList;
+    }
+}
