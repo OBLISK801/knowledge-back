@@ -9,6 +9,7 @@ import com.lei.admin.utils.ServletUtils;
 import com.lei.admin.vo.ChunkResult;
 import com.lei.admin.vo.FileInfoVO;
 import com.lei.error.SystemException;
+import com.lei.obtain.service.IFieryCountService;
 import com.lei.response.ResponseModel;
 import com.lei.system.vo.UserVO;
 import com.lei.utils.PageUtils;
@@ -42,6 +43,8 @@ public class FileInfoController {
     private IChunkInfoService chunkInfoService;
     @Autowired
     private IFileInfoService fileInfoService;
+    @Autowired
+    private IFieryCountService fieryCountService;
 
     /**
      * 200, 201, 202: 当前块上传成功，不需要重传。
@@ -91,6 +94,8 @@ public class FileInfoController {
     public void download(@RequestBody FileInfo info,
                          HttpServletResponse response) throws IOException {
         FileInfo fileInfo = fileInfoService.findById(info.getId());
+        //下载次数+1
+        fieryCountService.addCount(info.getId(),1,info.getUploadUser(),1);
         //获取文件
         File file = new File(fileInfo.getLocation(),fileInfo.getFileName());
         //获取文件输入流
@@ -108,8 +113,11 @@ public class FileInfoController {
 
     @GetMapping("/getUrl")
     @ApiOperation("获取资源链接")
-    public ResponseModel<FileInfo> getUrl(@RequestParam("id") Integer id) {
+    public ResponseModel<FileInfo> getUrl(@RequestParam("id") Integer id,
+                                          @RequestParam("userName") String userName) {
         FileInfo fileInfo = fileInfoService.findById(id);
+        // 预览数+1
+        fieryCountService.addCount(id,2,userName,1);
         return ResponseModel.success(fileInfo);
     }
 

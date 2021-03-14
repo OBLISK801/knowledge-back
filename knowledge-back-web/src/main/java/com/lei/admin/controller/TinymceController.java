@@ -5,6 +5,7 @@ import com.lei.admin.entity.Tinymce;
 import com.lei.admin.service.ITinymceService;
 import com.lei.admin.vo.FileInfoVO;
 import com.lei.admin.vo.TinymceVO;
+import com.lei.obtain.service.IFieryCountService;
 import com.lei.response.ResponseModel;
 import com.lei.utils.PageUtils;
 import io.swagger.annotations.Api;
@@ -28,6 +29,8 @@ public class TinymceController {
 
     @Autowired
     private ITinymceService tinymceService;
+    @Autowired
+    private IFieryCountService fieryCountService;
 
     @PostMapping("/save")
     @ApiOperation("暂时存储富文本内容")
@@ -61,8 +64,11 @@ public class TinymceController {
 
     @GetMapping("/listById")
     @ApiOperation("获取草稿")
-    public ResponseModel<Tinymce> listById(@RequestParam("tinymceId") Integer tinymceId) {
+    public ResponseModel<Tinymce> listById(@RequestParam("tinymceId") Integer tinymceId,
+                                           @RequestParam("userName") String userName) {
         Tinymce tinymce = tinymceService.listById(tinymceId);
+        //
+        fieryCountService.addCount(tinymceId,2,userName,2);
         return ResponseModel.success(tinymce);
     }
 
@@ -70,6 +76,8 @@ public class TinymceController {
     @ApiOperation("编辑文章")
     public ResponseModel edit(@RequestBody Tinymce tinymce) {
         tinymceService.edit(tinymce);
+        //
+        fieryCountService.addCount(tinymce.getId(),2,tinymce.getWriteUser(),2);
         return ResponseModel.success();
     }
 
