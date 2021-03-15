@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lei.obtain.mapper.FieryCountMapper">
+    <select id="getTopResourceId" resultType="com.lei.obtain.entity.FieryCount">
+        SELECT * FROM fiery_count WHERE resource_type = #{resourceType} ORDER BY click_count limit 0,10
+    </select>
+
+    <select id="getTopTinymce" resultType="com.lei.obtain.vo.TopTinymceVO">
+        SELECT b.click_count,a.* FROM tinymce a join fiery_count b ON a.id = b.resource_id WHERE a.id in
+        <foreach collection="resourceIds" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="getTopFileInfo" resultType="com.lei.obtain.vo.TopFileInfoVO">
+        SELECT b.click_count,a.* FROM file_info a join fiery_count b ON a.id = b.resource_id WHERE a.id in
+        <foreach collection="resourceIds" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
 
 </mapper>

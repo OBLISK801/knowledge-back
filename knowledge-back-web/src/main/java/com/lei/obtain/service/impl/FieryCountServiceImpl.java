@@ -2,15 +2,21 @@ package com.lei.obtain.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.lei.admin.entity.FileInfo;
+import com.lei.admin.entity.Tinymce;
 import com.lei.admin.service.IFileInfoService;
 import com.lei.obtain.entity.FieryCount;
 import com.lei.obtain.mapper.FieryCountMapper;
 import com.lei.obtain.service.IFieryCountService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lei.obtain.vo.TopFileInfoVO;
+import com.lei.obtain.vo.TopTinymceVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -73,5 +79,28 @@ public class FieryCountServiceImpl extends ServiceImpl<FieryCountMapper, FieryCo
             updateWrapper.eq("id", dbfiery.getId());
             fieryCountMapper.update(dbfiery, updateWrapper);
         }
+    }
+
+    public List<Integer> getTopResourceId(Integer resourceType) {
+        List<FieryCount> topResourceId = fieryCountMapper.getTopResourceId(resourceType);
+        List<Integer> top = new ArrayList<>();
+        for (FieryCount fieryCount : topResourceId) {
+            top.add(fieryCount.getResourceId());
+        }
+        return top;
+    }
+
+
+
+    @Override
+    public List<TopTinymceVO> getTopTinymce() {
+        List<Integer> top = this.getTopResourceId(2);
+        return fieryCountMapper.getTopTinymce(top);
+    }
+
+    @Override
+    public List<TopFileInfoVO> getTopFileInfo() {
+        List<Integer> top = this.getTopResourceId(1);
+        return fieryCountMapper.getTopFileInfo(top);
     }
 }

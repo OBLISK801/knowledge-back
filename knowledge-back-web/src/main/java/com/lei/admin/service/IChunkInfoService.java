@@ -2,9 +2,11 @@ package com.lei.admin.service;
 
 import com.lei.admin.entity.ChunkInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lei.admin.entity.Tinymce;
 import com.lei.admin.vo.ChunkResult;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * <p>
