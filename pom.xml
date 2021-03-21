@@ -11,7 +11,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.2</version>
+		<version>2.4.3</version>
 		<relativePath/>
 	</parent>
 	<groupId>com.lei</groupId>
@@ -45,6 +45,9 @@
 		<jodconverter-core.veriosn>4.2.2</jodconverter-core.veriosn>
 
 		<aliyun-oss.version>3.10.2</aliyun-oss.version>
+
+		<elasticsearch.version>7.3.2</elasticsearch.version>
+
 	</properties>
 
 	<dependencyManagement>
@@ -116,6 +119,22 @@
 				<artifactId>xml-apis</artifactId>
 				<version>${xml-apis.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-test</artifactId>
+				<version>2.4.3</version>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.13</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>fastjson</artifactId>
+				<version>1.2.69</version>
+			</dependency>
 
 			<!-- 上传下载 -->
 			<dependency>
@@ -165,6 +184,17 @@
 				<version>${aliyun-oss.version}</version>
 			</dependency>
 
+			<!--elasticsearch-->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+				<version>2.4.0</version>
+			</dependency>
+<!--			<dependency>-->
+<!--				<groupId>org.elasticsearch.client</groupId>-->
+<!--				<artifactId>elasticsearch-rest-high-level-client</artifactId>-->
+<!--				<version>7.3.2</version>-->
+<!--			</dependency>-->
 		</dependencies>
 	</dependencyManagement>
 

@@ -7,7 +7,7 @@ import com.lei.utils.PageUtils;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author GuanyuLei
@@ -15,10 +15,16 @@ import com.lei.utils.PageUtils;
  */
 public interface ITinymceService extends IService<Tinymce> {
     void saveContent(Tinymce tinymce);
+
     Tinymce listContent(String writeUser);
+
     void complete(Tinymce tinymce);
+
     PageUtils<Tinymce> listAll(Integer pageNum, Integer pageSize, TinymceVO tinymceVO);
+
     Tinymce listById(Integer tinymceId);
+
     void edit(Tinymce tinymce);
+
     void delete(Integer id);
 }

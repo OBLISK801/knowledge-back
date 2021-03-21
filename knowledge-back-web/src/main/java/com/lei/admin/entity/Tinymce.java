@@ -22,7 +22,7 @@ import java.util.Date;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="Tinymce对象", description="")
+@ApiModel(value="Tinymce对象")
 public class Tinymce implements Serializable {
 
     private static final long serialVersionUID = 1L;
