@@ -10,6 +10,7 @@ import com.lei.response.ResponseModel;
 import com.lei.utils.PageUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.service.ResponseMessage;
@@ -41,8 +42,9 @@ public class TinymceController {
 
     @GetMapping("/listContent")
     @ApiOperation("获取草稿")
-    public ResponseModel<Tinymce> listContent(@RequestParam("writeUser") String writeUser) {
-        Tinymce tinymce = tinymceService.listContent(writeUser);
+    public ResponseModel<Tinymce> listContent(@RequestParam("writeUser") String writeUser,
+                                              @RequestParam("isArticle")Integer isArticle) {
+        Tinymce tinymce = tinymceService.listContent(writeUser,isArticle);
         return ResponseModel.success(tinymce);
     }
 
@@ -57,8 +59,9 @@ public class TinymceController {
     @ApiOperation("获取所有文章")
     public ResponseModel<PageUtils<Tinymce>> listAll(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                                      @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+                                                     @RequestParam(value = "isArticle",defaultValue = "0") Integer isArticle,
                                                      TinymceVO tinymceVO) {
-        PageUtils<Tinymce> result = tinymceService.listAll(pageNum,pageSize,tinymceVO);
+        PageUtils<Tinymce> result = tinymceService.listAll(pageNum,pageSize,isArticle,tinymceVO);
         return ResponseModel.success(result);
     }
 

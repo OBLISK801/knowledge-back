@@ -51,9 +51,9 @@ public class TinymceServiceImpl extends ServiceImpl<TinymceMapper, Tinymce> impl
     }
 
     @Override
-    public Tinymce listContent(String writeUser) {
+    public Tinymce listContent(String writeUser, Integer isArticle) {
         QueryWrapper<Tinymce> wrapper = new QueryWrapper<>();
-        wrapper.and(i -> i.eq("write_user",writeUser).eq("state",0));
+        wrapper.and(i -> i.eq("write_user",writeUser).eq("state",0).eq("is_article",isArticle));
         return tinymceMapper.selectOne(wrapper);
     }
 
@@ -63,7 +63,7 @@ public class TinymceServiceImpl extends ServiceImpl<TinymceMapper, Tinymce> impl
         tinymce.setModifiedTime(new Date());
         tinymceMapper.insert(tinymce);
         QueryWrapper<Tinymce> wrapper = new QueryWrapper<>();
-        wrapper.and(i -> i.eq("write_user",tinymce.getWriteUser()).eq("state",0));
+        wrapper.and(i -> i.eq("write_user",tinymce.getWriteUser()).eq("state",0).eq("is_article",tinymce.getIsArticle()));
         tinymceMapper.delete(wrapper);
 //        String path = uploadFolder + File.separator + tinymce.getWriteUser() + File.separator + tinymce.getFileName() + ".pdf";
 //        File dir = new File(uploadFolder + File.separator + tinymce.getWriteUser());
@@ -74,15 +74,16 @@ public class TinymceServiceImpl extends ServiceImpl<TinymceMapper, Tinymce> impl
     }
 
     @Override
-    public PageUtils<Tinymce> listAll(Integer pageNum, Integer pageSize, TinymceVO tinymceVO) {
+    public PageUtils<Tinymce> listAll(Integer pageNum, Integer pageSize, Integer isArticle, TinymceVO tinymceVO) {
         String title = tinymceVO.getTitle();
         Integer classificationId = tinymceVO.getClassificationId();
         String writeUser = tinymceVO.getWriteUser();
         String summary = tinymceVO.getSummary();
         QueryWrapper<Tinymce> wrapper = new QueryWrapper<>();
-        List<Tinymce> tinymces = tinymceMapper.selectList(wrapper);
+        wrapper.eq("is_article",isArticle);
+        List<Tinymce> tinymce = tinymceMapper.selectList(wrapper);
         PageUtils<Tinymce> info = new PageUtils<>(pageNum,pageSize);
-        info.doPage(tinymces);
+        info.doPage(tinymce);
         return info;
     }
 

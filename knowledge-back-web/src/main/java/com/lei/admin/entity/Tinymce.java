@@ -58,4 +58,12 @@ public class Tinymce implements Serializable {
 
     @ApiModelProperty(value = "文章摘要")
     private String summary;
+
+    @ApiModelProperty(value = "0-笔记，1-文章")
+    private Integer isArticle;
+
+    @ApiModelProperty(value = "0-不发布，1-发布")
+    private Integer isPublic;
+
+
 }

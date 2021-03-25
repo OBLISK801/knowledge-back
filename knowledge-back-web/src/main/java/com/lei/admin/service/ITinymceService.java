@@ -4,6 +4,7 @@ import com.lei.admin.entity.Tinymce;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lei.admin.vo.TinymceVO;
 import com.lei.utils.PageUtils;
+import io.swagger.models.auth.In;
 
 /**
  * <p>
@@ -16,11 +17,11 @@ import com.lei.utils.PageUtils;
 public interface ITinymceService extends IService<Tinymce> {
     void saveContent(Tinymce tinymce);
 
-    Tinymce listContent(String writeUser);
+    Tinymce listContent(String writeUser,Integer isArticle);
 
     void complete(Tinymce tinymce);
 
-    PageUtils<Tinymce> listAll(Integer pageNum, Integer pageSize, TinymceVO tinymceVO);
+    PageUtils<Tinymce> listAll(Integer pageNum, Integer pageSize, Integer isArticle, TinymceVO tinymceVO);
 
     Tinymce listById(Integer tinymceId);
 
