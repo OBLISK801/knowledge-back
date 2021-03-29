@@ -4,7 +4,9 @@ package com.lei.admin.controller;
 import com.lei.admin.entity.Tag;
 import com.lei.admin.service.ITagService;
 import com.lei.admin.vo.ClassificationNodeVO;
+import com.lei.admin.vo.FileTagVO;
 import com.lei.admin.vo.TagVO;
+import com.lei.admin.vo.TinymceTagVO;
 import com.lei.error.SystemException;
 import com.lei.response.ResponseModel;
 import com.lei.utils.PageUtils;
@@ -12,6 +14,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <p>
@@ -32,7 +36,7 @@ public class TagController {
     @GetMapping("/listAll")
     @ApiOperation("获取所有tag数据")
     public ResponseModel<PageUtils<Tag>> listAll(@RequestParam(value = "pageNum", defaultValue = "1")Integer pageNum,
-                                                 @RequestParam(value = "pageSize", defaultValue = "10")Integer pageSize) {
+                                                 @RequestParam(value = "pageSize", defaultValue = "6")Integer pageSize) {
         PageUtils<Tag> result = tagService.listAll(pageNum,pageSize);
         return ResponseModel.success(result);
     }
@@ -58,6 +62,27 @@ public class TagController {
         return ResponseModel.success();
     }
 
+    @PostMapping("/addFileTag")
+    @ApiOperation("插入文件-标签关系")
+    public ResponseModel addFileTag(@RequestBody FileTagVO fileTagVO) {
+        tagService.addFileTag(fileTagVO);
+        return ResponseModel.success();
+    }
+
+
+    @PostMapping("/addArticleTag")
+    @ApiOperation("插入文章-标签关系")
+    public ResponseModel addArticleTag(@RequestBody TinymceTagVO tinymceTagVO) {
+        tagService.addArticleTag(tinymceTagVO);
+        return ResponseModel.success();
+    }
+
+    @GetMapping("/list")
+    @ApiOperation("获取所有tag数据")
+    public ResponseModel<List<Tag>> list() {
+        List<Tag> result = tagService.listAll();
+        return ResponseModel.success(result);
+    }
 
 
 

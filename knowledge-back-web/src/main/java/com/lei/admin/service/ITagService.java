@@ -2,9 +2,13 @@ package com.lei.admin.service;
 
 import com.lei.admin.entity.Tag;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lei.admin.vo.FileTagVO;
 import com.lei.admin.vo.TagVO;
+import com.lei.admin.vo.TinymceTagVO;
 import com.lei.error.SystemException;
 import com.lei.utils.PageUtils;
+
+import java.util.List;
 
 /**
  * <p>
@@ -23,4 +27,10 @@ public interface ITagService extends IService<Tag> {
     void delete(Integer tagId);
 
     void edit(Integer id, TagVO tagVO) throws SystemException;
+
+    void addFileTag(FileTagVO fileTagVO);
+
+    void addArticleTag(TinymceTagVO tinymceTagVO);
+
+    List<Tag> listAll();
 }

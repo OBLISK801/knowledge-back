@@ -3,6 +3,7 @@ package com.lei.admin.controller;
 
 import com.lei.admin.entity.Tinymce;
 import com.lei.admin.service.ITinymceService;
+import com.lei.admin.vo.ArticleVO;
 import com.lei.admin.vo.FileInfoVO;
 import com.lei.admin.vo.TinymceVO;
 import com.lei.obtain.service.IFieryCountService;
@@ -35,44 +36,44 @@ public class TinymceController {
 
     @PostMapping("/save")
     @ApiOperation("暂时存储富文本内容")
-    public ResponseModel save(@RequestBody Tinymce tinymce) {
-        tinymceService.saveContent(tinymce);
-        return ResponseModel.success();
+    public ResponseModel<Integer> save(@RequestBody Tinymce tinymce) {
+        Integer id = tinymceService.saveContent(tinymce);
+        return ResponseModel.success(id);
     }
 
     @GetMapping("/listContent")
     @ApiOperation("获取草稿")
-    public ResponseModel<Tinymce> listContent(@RequestParam("writeUser") String writeUser,
-                                              @RequestParam("isArticle")Integer isArticle) {
-        Tinymce tinymce = tinymceService.listContent(writeUser,isArticle);
-        return ResponseModel.success(tinymce);
+    public ResponseModel<ArticleVO> listContent(@RequestParam("writeUser") String writeUser,
+                                                @RequestParam("isArticle")Integer isArticle) {
+        ArticleVO articleVO = tinymceService.listContent(writeUser,isArticle);
+        return ResponseModel.success(articleVO);
     }
 
     @PostMapping("/complete")
     @ApiOperation("保存文章")
-    public ResponseModel complete(@RequestBody Tinymce tinymce) {
-        tinymceService.complete(tinymce);
-        return ResponseModel.success();
+    public ResponseModel<Integer> complete(@RequestBody Tinymce tinymce) {
+        Integer id = tinymceService.complete(tinymce);
+        return ResponseModel.success(id);
     }
 
     @GetMapping("/listAll")
     @ApiOperation("获取所有文章")
-    public ResponseModel<PageUtils<Tinymce>> listAll(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+    public ResponseModel<PageUtils<ArticleVO>> listAll(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                                      @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
                                                      @RequestParam(value = "isArticle",defaultValue = "0") Integer isArticle,
                                                      TinymceVO tinymceVO) {
-        PageUtils<Tinymce> result = tinymceService.listAll(pageNum,pageSize,isArticle,tinymceVO);
+        PageUtils<ArticleVO> result = tinymceService.listAll(pageNum,pageSize,isArticle,tinymceVO);
         return ResponseModel.success(result);
     }
 
     @GetMapping("/listById")
     @ApiOperation("获取草稿")
-    public ResponseModel<Tinymce> listById(@RequestParam("tinymceId") Integer tinymceId,
-                                           @RequestParam("userName") String userName) {
-        Tinymce tinymce = tinymceService.listById(tinymceId);
+    public ResponseModel<ArticleVO> listById(@RequestParam("tinymceId") Integer tinymceId,
+                                             @RequestParam("userName") String userName) {
+        ArticleVO articleVO = tinymceService.listById(tinymceId);
         //
         fieryCountService.addCount(tinymceId,2,userName,2);
-        return ResponseModel.success(tinymce);
+        return ResponseModel.success(articleVO);
     }
 
     @PostMapping("/edit")
