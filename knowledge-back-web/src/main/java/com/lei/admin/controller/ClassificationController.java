@@ -97,5 +97,12 @@ public class ClassificationController {
         return ResponseModel.success(map);
     }
 
+    @ApiOperation("获取所有数据")
+    @GetMapping("/listAll")
+    public ResponseModel<List<Classification>> listAll() {
+        List<Classification> result = classificationService.listAll();
+        return ResponseModel.success(result);
+    }
+
 }
 

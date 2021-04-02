@@ -14,6 +14,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lei.admin.vo.FileTagVO;
 import com.lei.admin.vo.TagVO;
 import com.lei.admin.vo.TinymceTagVO;
+import com.lei.admin.vo.WordCloudDTO;
 import com.lei.error.SystemCodeEnum;
 import com.lei.error.SystemException;
 import com.lei.utils.PageUtils;
@@ -115,5 +116,10 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements ITagS
     public List<Tag> listAll() {
         QueryWrapper<Tag> wrapper = new QueryWrapper<>();
         return tagMapper.selectList(wrapper);
+    }
+
+    @Override
+    public List<WordCloudDTO> listWordCloudData() {
+        return tagMapper.listWordCloudData();
     }
 }

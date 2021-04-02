@@ -41,12 +41,12 @@ public class FieryCountController {
         return ResponseModel.success(list);
     }
 
-    @GetMapping("/getTopFileInfo")
-    @ApiOperation("获取热门文件资源")
-    public ResponseModel<List<TopFileInfoVO>> getTopFileInfo() {
-        List<TopFileInfoVO> list = fieryCountService.getTopFileInfo();
-        return ResponseModel.success(list);
-    }
+//    @GetMapping("/getTopFileInfo")
+//    @ApiOperation("获取热门文件资源")
+//    public ResponseModel<List<TopFileInfoVO>> getTopFileInfo() {
+//        List<TopFileInfoVO> list = fieryCountService.getTopFileInfo();
+//        return ResponseModel.success(list);
+//    }
 
 }
 

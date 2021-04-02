@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lei.obtain.mapper.FieryCountMapper">
     <select id="getTopResourceId" resultType="com.lei.obtain.entity.FieryCount">
-        SELECT * FROM fiery_count WHERE resource_type = #{resourceType} ORDER BY click_count limit 0,10
+        SELECT fc.* FROM fiery_count fc JOIN tinymce t ON fc.resource_id = t.id
+        WHERE resource_type = #{resourceType}  AND is_article = 1 ORDER BY click_count DESC LIMIT 0,10
     </select>
 
     <select id="getTopTinymce" resultType="com.lei.obtain.vo.TopTinymceVO">

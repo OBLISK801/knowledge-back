@@ -38,7 +38,7 @@ public class KnowledgeApplicationTests {
         QueryWrapper<Tinymce> wrapper = new QueryWrapper<>();
         List<Tinymce> tinymceList = tinymceMapper.selectList(wrapper);
         for (Tinymce tinymce : tinymceList) {
-            IndexRequest request = new IndexRequest("testaaa");
+            IndexRequest request = new IndexRequest("testbbb");
             request.id(String.valueOf(tinymce.getId()));
             request.source(JSON.toJSONString(tinymce), XContentType.JSON);
             IndexResponse indexResponse = restHighLevelClient.index(request, RequestOptions.DEFAULT);

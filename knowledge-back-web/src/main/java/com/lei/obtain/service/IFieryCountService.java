@@ -23,5 +23,5 @@ public interface IFieryCountService extends IService<FieryCount> {
 
     List<TopTinymceVO> getTopTinymce();
 
-    List<TopFileInfoVO> getTopFileInfo();
+//    List<TopFileInfoVO> getTopFileInfo();
 }

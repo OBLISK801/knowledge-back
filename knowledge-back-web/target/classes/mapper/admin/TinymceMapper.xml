@@ -1,5 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lei.admin.mapper.TinymceMapper">
+    <select id="getArticleByClassificationId" resultType="com.lei.admin.vo.ArticleAllVO">
+        SELECT
+            t.id,
+            t.title,
+            t.classification_id,
+            t.summary,
+            t.create_time,
+            t.content,
+            su.username,
+            su.avatar,
+            IFNULL(fc.click_count,0) click_count
+        FROM
+            tinymce t
+                LEFT JOIN sys_user su ON t.write_user = su.username
+                LEFT JOIN fiery_count fc ON t.id = fc.resource_id
+        WHERE
+            t.is_article = 1
+            AND t.state = 1
+        <if test="classificationId != null and classificationId != ''">
+            AND t.classification_id = #{classificationId}
+        </if>
+    </select>
 
+    <select id="getArticleById" resultType="com.lei.admin.vo.ArticleAllVO">
+        SELECT
+            t.id,
+            t.title,
+            t.classification_id,
+            t.summary,
+            t.create_time,
+            t.content,
+            su.username,
+            su.avatar,
+            IFNULL(fc.click_count,0) click_count
+        FROM
+            tinymce t
+                LEFT JOIN sys_user su ON t.write_user = su.username
+                LEFT JOIN fiery_count fc ON t.id = fc.resource_id
+        WHERE
+          t.is_article = 1
+          AND t.state = 1
+          AND t.id = #{tinymceId}
+    </select>
+
+    <select id="getArticle" resultType="com.lei.admin.vo.ArticleAllVO">
+        SELECT
+        t.id,
+        t.title,
+        t.classification_id,
+        t.summary,
+        t.create_time,
+        t.content,
+        su.username,
+        su.avatar,
+        IFNULL(fc.click_count,0) click_count
+        FROM
+        tinymce t
+        LEFT JOIN sys_user su ON t.write_user = su.username
+        LEFT JOIN fiery_count fc ON t.id = fc.resource_id
+        WHERE
+        t.is_article = 1
+        AND t.state = 1
+    </select>
 </mapper>

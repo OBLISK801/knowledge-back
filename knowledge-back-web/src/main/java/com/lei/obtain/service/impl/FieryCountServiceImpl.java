@@ -98,9 +98,9 @@ public class FieryCountServiceImpl extends ServiceImpl<FieryCountMapper, FieryCo
         return fieryCountMapper.getTopTinymce(top);
     }
 
-    @Override
-    public List<TopFileInfoVO> getTopFileInfo() {
-        List<Integer> top = this.getTopResourceId(1);
-        return fieryCountMapper.getTopFileInfo(top);
-    }
+//    @Override
+//    public List<TopFileInfoVO> getTopFileInfo() {
+//        List<Integer> top = this.getTopResourceId(1);
+//        return fieryCountMapper.getTopFileInfo(top);
+//    }
 }

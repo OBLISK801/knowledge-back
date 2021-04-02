@@ -4,13 +4,17 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.lei.admin.entity.Tinymce;
 import com.lei.admin.entity.TinymceTag;
+import com.lei.admin.mapper.TagMapper;
 import com.lei.admin.mapper.TinymceMapper;
 import com.lei.admin.mapper.TinymceTagMapper;
 import com.lei.admin.service.ITinymceService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lei.admin.utils.PDFUtils;
+import com.lei.admin.vo.ArticleAllVO;
 import com.lei.admin.vo.ArticleVO;
 import com.lei.admin.vo.TinymceVO;
+import com.lei.obtain.entity.FieryCount;
+import com.lei.obtain.mapper.FieryCountMapper;
 import com.lei.system.entity.User;
 import com.lei.utils.PageUtils;
 import org.apache.poi.ss.formula.functions.T;
@@ -39,6 +43,10 @@ public class TinymceServiceImpl extends ServiceImpl<TinymceMapper, Tinymce> impl
     private TinymceMapper tinymceMapper;
     @Autowired
     private TinymceTagMapper tinymceTagMapper;
+    @Autowired
+    private FieryCountMapper fieryCountMapper;
+    @Autowired
+    private TagMapper tagMapper;
     @Value("D:\\GraduationProject\\StageOne\\knowledge-back\\summary")
     private String uploadFolder;
 
@@ -141,6 +149,9 @@ public class TinymceServiceImpl extends ServiceImpl<TinymceMapper, Tinymce> impl
     public void delete(Integer id) {
         // 删除的文件可能不存在
         tinymceMapper.deleteById(id);
+        QueryWrapper<FieryCount> wrapper = new QueryWrapper<>();
+        wrapper.eq("resource_id",id);
+        fieryCountMapper.delete(wrapper);
         this.deleteTags(id);
     }
 
@@ -159,5 +170,37 @@ public class TinymceServiceImpl extends ServiceImpl<TinymceMapper, Tinymce> impl
             result.add(tinymceTag.getTagId());
         }
         return result;
+    }
+
+    @Override
+    public PageUtils<ArticleAllVO> getArticleById(Integer pageNum,Integer pageSize,Integer classificationId) {
+        List<ArticleAllVO> articleAllVOS = tinymceMapper.getArticleByClassificationId(classificationId);
+        for (ArticleAllVO vo : articleAllVOS) {
+            List<String> strings = tagMapper.getTagName(vo.getId());
+            vo.setTagName(strings);
+        }
+        PageUtils<ArticleAllVO> info = new PageUtils<>(pageNum,pageSize);
+        info.doPage(articleAllVOS);
+        return info;
+    }
+
+    @Override
+    public ArticleAllVO listDetails(Integer tinymceId) {
+        ArticleAllVO articleAllVO = tinymceMapper.getArticleById(tinymceId);
+        List<String> strings = tagMapper.getTagName(articleAllVO.getId());
+        articleAllVO.setTagName(strings);
+        return articleAllVO;
+    }
+
+    @Override
+    public PageUtils<ArticleAllVO> getArticle(Integer pageNum, Integer pageSize) {
+        List<ArticleAllVO> articleAllVOS = tinymceMapper.getArticle();
+        for (ArticleAllVO vo : articleAllVOS) {
+            List<String> strings = tagMapper.getTagName(vo.getId());
+            vo.setTagName(strings);
+        }
+        PageUtils<ArticleAllVO> info = new PageUtils<>(pageNum,pageSize);
+        info.doPage(articleAllVOS);
+        return info;
     }
 }

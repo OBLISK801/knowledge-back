@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.lei.admin.vo.FileTagVO;
 import com.lei.admin.vo.TagVO;
 import com.lei.admin.vo.TinymceTagVO;
+import com.lei.admin.vo.WordCloudDTO;
 import com.lei.error.SystemException;
 import com.lei.utils.PageUtils;
 
@@ -33,4 +34,6 @@ public interface ITagService extends IService<Tag> {
     void addArticleTag(TinymceTagVO tinymceTagVO);
 
     List<Tag> listAll();
+
+    List<WordCloudDTO> listWordCloudData();
 }

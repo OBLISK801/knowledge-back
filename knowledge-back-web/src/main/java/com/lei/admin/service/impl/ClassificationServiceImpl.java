@@ -120,4 +120,10 @@ public class ClassificationServiceImpl extends ServiceImpl<ClassificationMapper,
         }
         return graphLinksVOS;
     }
+
+    @Override
+    public List<Classification> listAll() {
+        QueryWrapper<Classification> wrapper = new QueryWrapper<>();
+        return classificationMapper.selectList(wrapper);
+    }
 }

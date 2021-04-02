@@ -34,4 +34,5 @@ public interface IClassificationService extends IService<Classification> {
 
     List<GraphLinksVO> getGraphLinks();
 
+    List<Classification> listAll();
 }

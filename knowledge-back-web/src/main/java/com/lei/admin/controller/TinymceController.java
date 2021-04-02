@@ -3,6 +3,7 @@ package com.lei.admin.controller;
 
 import com.lei.admin.entity.Tinymce;
 import com.lei.admin.service.ITinymceService;
+import com.lei.admin.vo.ArticleAllVO;
 import com.lei.admin.vo.ArticleVO;
 import com.lei.admin.vo.FileInfoVO;
 import com.lei.admin.vo.TinymceVO;
@@ -91,6 +92,35 @@ public class TinymceController {
         tinymceService.delete(id);
         return ResponseModel.success();
     }
+
+    @GetMapping("/getArticleById")
+    @ApiOperation("获取文章相关知识")
+    public ResponseModel<PageUtils<ArticleAllVO>> getArticleById(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+                                                             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+                                                             @RequestParam(value = "classificationId") Integer classificationId) {
+        PageUtils<ArticleAllVO> result = tinymceService.getArticleById(pageNum,pageSize,classificationId);
+        return ResponseModel.success(result);
+    }
+
+    @GetMapping("/listDetails")
+    @ApiOperation("获取草稿")
+    public ResponseModel<ArticleAllVO> listDetails(@RequestParam("tinymceId") Integer tinymceId,
+                                                   @RequestParam("userName") String userName) {
+        ArticleAllVO articleVO = tinymceService.listDetails(tinymceId);
+        //
+        fieryCountService.addCount(tinymceId,2,userName,2);
+        return ResponseModel.success(articleVO);
+    }
+
+    @GetMapping("/getArticle")
+    @ApiOperation("获取文章相关知识")
+    public ResponseModel<PageUtils<ArticleAllVO>> getArticle(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+                                                             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
+        PageUtils<ArticleAllVO> result = tinymceService.getArticle(pageNum,pageSize);
+        return ResponseModel.success(result);
+    }
+
+
 
 
 }

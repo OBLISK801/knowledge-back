@@ -3,10 +3,7 @@ package com.lei.admin.controller;
 
 import com.lei.admin.entity.Tag;
 import com.lei.admin.service.ITagService;
-import com.lei.admin.vo.ClassificationNodeVO;
-import com.lei.admin.vo.FileTagVO;
-import com.lei.admin.vo.TagVO;
-import com.lei.admin.vo.TinymceTagVO;
+import com.lei.admin.vo.*;
 import com.lei.error.SystemException;
 import com.lei.response.ResponseModel;
 import com.lei.utils.PageUtils;
@@ -16,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -81,6 +79,13 @@ public class TagController {
     @ApiOperation("获取所有tag数据")
     public ResponseModel<List<Tag>> list() {
         List<Tag> result = tagService.listAll();
+        return ResponseModel.success(result);
+    }
+
+    @GetMapping("/listWordCloudData")
+    @ApiOperation("获取词云数据")
+    public ResponseModel<List<WordCloudDTO>> listWordCloudData() {
+        List<WordCloudDTO> result = tagService.listWordCloudData();
         return ResponseModel.success(result);
     }
 

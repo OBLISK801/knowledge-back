@@ -2,6 +2,7 @@ package com.lei.admin.service;
 
 import com.lei.admin.entity.Tinymce;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lei.admin.vo.ArticleAllVO;
 import com.lei.admin.vo.ArticleVO;
 import com.lei.admin.vo.TinymceVO;
 import com.lei.utils.PageUtils;
@@ -29,4 +30,10 @@ public interface ITinymceService extends IService<Tinymce> {
     void edit(Tinymce tinymce);
 
     void delete(Integer id);
+
+    PageUtils<ArticleAllVO> getArticleById(Integer pageNum, Integer pageSize, Integer classificationId);
+
+    ArticleAllVO listDetails(Integer tinymceId);
+
+    PageUtils<ArticleAllVO> getArticle(Integer pageNum, Integer pageSize);
 }
