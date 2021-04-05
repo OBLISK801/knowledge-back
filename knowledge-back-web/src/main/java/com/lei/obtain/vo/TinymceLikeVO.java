@@ -4,14 +4,11 @@ import lombok.Data;
 
 /**
  * @Author LEI
- * @Date 2021/3/19 15:24
+ * @Date 2021/4/4 9:56
  * @Description TODO
  */
 @Data
-public class CommentVO {
-
-    private String commentUser;
-    private String commentContent;
+public class TinymceLikeVO {
     private Integer tinymceId;
-
+    private String username;
 }

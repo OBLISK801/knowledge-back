@@ -1,7 +1,8 @@
 package com.lei.obtain.mapper;
 
-import com.lei.obtain.entity.Comment;
+import com.lei.obtain.entity.TinymceLike;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,9 +11,8 @@ import org.springframework.stereotype.Repository;
  * </p>
  *
  * @author GuanyuLei
- * @since 2021-04-02
+ * @since 2021-04-04
  */
 @Repository
-public interface CommentMapper extends BaseMapper<Comment> {
-
+public interface TinymceLikeMapper extends BaseMapper<TinymceLike> {
 }

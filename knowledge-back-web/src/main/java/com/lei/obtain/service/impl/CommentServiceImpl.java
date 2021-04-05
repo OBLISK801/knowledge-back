@@ -5,9 +5,9 @@ import com.lei.obtain.entity.Comment;
 import com.lei.obtain.mapper.CommentMapper;
 import com.lei.obtain.service.ICommentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lei.obtain.vo.CommentVO;
-import com.lei.utils.PageUtils;
-import org.springframework.beans.BeanUtils;
+import com.lei.obtain.utils.CommentBuilder;
+import com.lei.obtain.utils.CommentConverter;
+import com.lei.obtain.vo.CommentNodeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ import java.util.List;
  * </p>
  *
  * @author GuanyuLei
- * @since 2021-03-19
+ * @since 2021-04-02
  */
 @Service
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements ICommentService {
@@ -29,20 +29,20 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private CommentMapper commentMapper;
 
     @Override
-    public void comment(CommentVO commentVO) {
-        Comment comment = new Comment();
-        BeanUtils.copyProperties(commentVO,comment);
-        comment.setCommentTime(new Date());
-        commentMapper.insert(comment);
+    public List<CommentNodeVO> tree(Integer articleId) {
+        QueryWrapper<Comment> wrapper = new QueryWrapper<>();
+        wrapper.eq("article_id",articleId);
+        List<Comment> results = commentMapper.selectList(wrapper);
+        for (Comment result : results) {
+            result.setInputShow(false);
+        }
+        List<CommentNodeVO> commentNodeVOS = CommentConverter.convertToAllCommentNodeVO(results);
+        return CommentBuilder.build(commentNodeVOS);
     }
 
     @Override
-    public PageUtils<Comment> getComment(Integer tinymceId, Integer pageNo, Integer pageSize) {
-        QueryWrapper<Comment> wrapper = new QueryWrapper<>();
-        wrapper.eq("tinymce_id",tinymceId);
-        List<Comment> list = commentMapper.selectList(wrapper);
-        PageUtils<Comment> info = new PageUtils<>(pageNo,pageSize);
-        info.doPage(list);
-        return info;
+    public void add(Comment comment) {
+        comment.setTime(new Date());
+        commentMapper.insert(comment);
     }
 }
