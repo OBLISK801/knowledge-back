@@ -4,6 +4,7 @@
     <select id="findFileList" resultType="com.lei.admin.entity.FileInfo">
         select * from file_info
         <where>
+            upload_user = #{username}
             <if test="fileName != null and fileName != ''">
                 and file_name like concat('%',#{fileName},'%')
             </if>
@@ -16,6 +17,39 @@
             <if test="beginDate != null and endDate != null">
                 and upload_time between #{beginDate} and #{endDate}
             </if>
+            <if test="isPublic !=null">
+                and is_public = #{isPublic}
+            </if>
         </where>
     </select>
+
+    <select id="findPublicFile" resultType="com.lei.admin.entity.FileInfo">
+        SELECT fi.* FROM file_info fi LEFT JOIN file_tag ft ON fi.identifier = ft.identifier
+        <where>
+            fi.is_public = 1
+            <if test="tagId != null">
+                AND ft.tag_id = #{tagId}
+            </if>
+            <if test="classificationId != null">
+                AND fi.classification_id = #{classificationId}
+            </if>
+        </where>
+    </select>
+
+    <select id="findByTagId" resultType="com.lei.admin.entity.FileInfo">
+        SELECT * FROM file_info WHERE identifier IN (SELECT identifier FROM file_tag WHERE tag_id = #{tagId}) AND is_public = 1
+    </select>
+
+    <select id="findByUser" resultType="com.lei.admin.vo.DownLoadVO">
+        SELECT
+            di.download_user,
+            di.download_time,
+            fi.*
+        FROM
+            file_info fi
+                JOIN download_info di ON fi.id = di.file_id
+        WHERE
+            di.download_user = #{username}
+    </select>
+
 </mapper>

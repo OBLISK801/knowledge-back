@@ -36,4 +36,6 @@ public interface ITagService extends IService<Tag> {
     List<Tag> listAll();
 
     List<WordCloudDTO> listWordCloudData();
+
+    List<Tag> getTopTag();
 }

@@ -126,4 +126,11 @@ public class ClassificationServiceImpl extends ServiceImpl<ClassificationMapper,
         QueryWrapper<Classification> wrapper = new QueryWrapper<>();
         return classificationMapper.selectList(wrapper);
     }
+
+    @Override
+    public List<Classification> listChildren() {
+        QueryWrapper<Classification> wrapper = new QueryWrapper<>();
+        wrapper.eq("level",3);
+        return classificationMapper.selectList(wrapper);
+    }
 }

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author GuanyuLei
@@ -53,9 +53,10 @@ public class TinymceFavoritesController {
 
     @GetMapping("/listAll")
     @ApiOperation("获取我的收藏")
-    public ResponseModel<PageUtils<FavoriteArticleVO>> listAll(@RequestParam("pageNum")Integer pageNum,
-                                                               @RequestParam("pageSize")Integer pageSize) {
-        PageUtils<FavoriteArticleVO> result = tinymceFavoritesService.listAll(pageNum,pageSize);
+    public ResponseModel<PageUtils<FavoriteArticleVO>> listAll(@RequestParam("pageNum") Integer pageNum,
+                                                               @RequestParam("pageSize") Integer pageSize,
+                                                               @RequestParam("username") String username) {
+        PageUtils<FavoriteArticleVO> result = tinymceFavoritesService.listAll(pageNum, pageSize, username);
         return ResponseModel.success(result);
     }
 }

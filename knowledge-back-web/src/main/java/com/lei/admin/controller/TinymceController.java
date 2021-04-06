@@ -19,7 +19,7 @@ import springfox.documentation.service.ResponseMessage;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author GuanyuLei
@@ -45,8 +45,8 @@ public class TinymceController {
     @GetMapping("/listContent")
     @ApiOperation("获取草稿")
     public ResponseModel<ArticleVO> listContent(@RequestParam("writeUser") String writeUser,
-                                                @RequestParam("isArticle")Integer isArticle) {
-        ArticleVO articleVO = tinymceService.listContent(writeUser,isArticle);
+                                                @RequestParam("isArticle") Integer isArticle) {
+        ArticleVO articleVO = tinymceService.listContent(writeUser, isArticle);
         return ResponseModel.success(articleVO);
     }
 
@@ -60,10 +60,11 @@ public class TinymceController {
     @GetMapping("/listAll")
     @ApiOperation("获取所有文章")
     public ResponseModel<PageUtils<ArticleVO>> listAll(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
-                                                     @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
-                                                     @RequestParam(value = "isArticle",defaultValue = "0") Integer isArticle,
-                                                     TinymceVO tinymceVO) {
-        PageUtils<ArticleVO> result = tinymceService.listAll(pageNum,pageSize,isArticle,tinymceVO);
+                                                       @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+                                                       @RequestParam(value = "isArticle", defaultValue = "0") Integer isArticle,
+                                                       @RequestParam(value = "username") String username,
+                                                       TinymceVO tinymceVO) {
+        PageUtils<ArticleVO> result = tinymceService.listAll(pageNum, pageSize, isArticle, username, tinymceVO);
         return ResponseModel.success(result);
     }
 
@@ -73,7 +74,7 @@ public class TinymceController {
                                              @RequestParam("userName") String userName) {
         ArticleVO articleVO = tinymceService.listById(tinymceId);
         //
-        fieryCountService.addCount(tinymceId,2,userName,2);
+        fieryCountService.addCount(tinymceId, 2, userName, 2);
         return ResponseModel.success(articleVO);
     }
 
@@ -82,13 +83,13 @@ public class TinymceController {
     public ResponseModel edit(@RequestBody Tinymce tinymce) {
         tinymceService.edit(tinymce);
         //
-        fieryCountService.addCount(tinymce.getId(),2,tinymce.getWriteUser(),2);
+        fieryCountService.addCount(tinymce.getId(), 2, tinymce.getWriteUser(), 2);
         return ResponseModel.success();
     }
 
     @DeleteMapping("/delete")
     @ApiOperation("删除文章")
-    public ResponseModel delete(@RequestParam(value = "id",defaultValue = "")Integer id) {
+    public ResponseModel delete(@RequestParam(value = "id", defaultValue = "") Integer id) {
         tinymceService.delete(id);
         return ResponseModel.success();
     }
@@ -96,9 +97,9 @@ public class TinymceController {
     @GetMapping("/getArticleById")
     @ApiOperation("获取文章相关知识")
     public ResponseModel<PageUtils<ArticleAllVO>> getArticleById(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
-                                                             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
-                                                             @RequestParam(value = "classificationId") Integer classificationId) {
-        PageUtils<ArticleAllVO> result = tinymceService.getArticleById(pageNum,pageSize,classificationId);
+                                                                 @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+                                                                 @RequestParam(value = "classificationId") Integer classificationId) {
+        PageUtils<ArticleAllVO> result = tinymceService.getArticleById(pageNum, pageSize, classificationId);
         return ResponseModel.success(result);
     }
 
@@ -108,19 +109,25 @@ public class TinymceController {
                                                    @RequestParam("userName") String userName) {
         ArticleAllVO articleVO = tinymceService.listDetails(tinymceId);
         //
-        fieryCountService.addCount(tinymceId,2,userName,2);
+        fieryCountService.addCount(tinymceId, 2, userName, 2);
         return ResponseModel.success(articleVO);
     }
 
     @GetMapping("/getArticle")
     @ApiOperation("获取文章相关知识")
     public ResponseModel<PageUtils<ArticleAllVO>> getArticle(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
-                                                             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
-        PageUtils<ArticleAllVO> result = tinymceService.getArticle(pageNum,pageSize);
+                                                             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+                                                             @RequestParam(value = "username") String username) {
+        PageUtils<ArticleAllVO> result = tinymceService.getArticle(pageNum, pageSize, username);
         return ResponseModel.success(result);
     }
 
-
+    @PutMapping("/public/{id}")
+    @ApiOperation("发布文章")
+    public ResponseModel publicArticle(@PathVariable Integer id) {
+        tinymceService.publicArticle(id);
+        return ResponseModel.success();
+    }
 
 
 }

@@ -89,6 +89,13 @@ public class TagController {
         return ResponseModel.success(result);
     }
 
+    @GetMapping("/getTopTag")
+    @ApiOperation("获取排名最高的tag")
+    public ResponseModel<List<Tag>> getTopTag() {
+        List<Tag> result = tagService.getTopTag();
+        return ResponseModel.success(result);
+    }
+
 
 
 

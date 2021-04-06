@@ -11,6 +11,7 @@
         <foreach collection="resourceIds" item="id" open="(" close=")" separator=",">
             #{id}
         </foreach>
+        AND a.is_public = 1
     </select>
 
     <select id="getTopFileInfo" resultType="com.lei.obtain.vo.TopFileInfoVO">

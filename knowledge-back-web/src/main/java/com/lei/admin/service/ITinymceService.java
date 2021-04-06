@@ -8,6 +8,8 @@ import com.lei.admin.vo.TinymceVO;
 import com.lei.utils.PageUtils;
 import io.swagger.models.auth.In;
 
+import java.util.List;
+
 /**
  * <p>
  * 服务类
@@ -23,7 +25,7 @@ public interface ITinymceService extends IService<Tinymce> {
 
     Integer complete(Tinymce tinymce);
 
-    PageUtils<ArticleVO> listAll(Integer pageNum, Integer pageSize, Integer isArticle, TinymceVO tinymceVO);
+    PageUtils<ArticleVO> listAll(Integer pageNum, Integer pageSize, Integer isArticle, String username, TinymceVO tinymceVO);
 
     ArticleVO listById(Integer tinymceId);
 
@@ -35,5 +37,9 @@ public interface ITinymceService extends IService<Tinymce> {
 
     ArticleAllVO listDetails(Integer tinymceId);
 
-    PageUtils<ArticleAllVO> getArticle(Integer pageNum, Integer pageSize);
+    PageUtils<ArticleAllVO> getArticle(Integer pageNum, Integer pageSize, String username);
+
+    void publicArticle(Integer id);
+
+    List<Integer> listTags(Integer tinymceId);
 }

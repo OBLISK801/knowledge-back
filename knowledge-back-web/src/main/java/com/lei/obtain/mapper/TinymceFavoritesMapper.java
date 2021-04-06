@@ -3,6 +3,7 @@ package com.lei.obtain.mapper;
 import com.lei.obtain.entity.TinymceFavorites;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lei.obtain.vo.FavoriteArticleVO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,5 +18,5 @@ import java.util.List;
  */
 @Repository
 public interface TinymceFavoritesMapper extends BaseMapper<TinymceFavorites> {
-    List<FavoriteArticleVO> listAll();
+    List<FavoriteArticleVO> listAll(@Param("username")String username);
 }

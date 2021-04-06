@@ -122,4 +122,9 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements ITagS
     public List<WordCloudDTO> listWordCloudData() {
         return tagMapper.listWordCloudData();
     }
+
+    @Override
+    public List<Tag> getTopTag() {
+        return null;
+    }
 }

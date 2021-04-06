@@ -8,7 +8,7 @@ import com.lei.utils.PageUtils;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author GuanyuLei
@@ -22,5 +22,5 @@ public interface ITinymceFavoritesService extends IService<TinymceFavorites> {
 
     TinymceFavorites isFavoriteArticle(TinymceFavoritesVO favoritesVO);
 
-    PageUtils<FavoriteArticleVO> listAll(Integer pageNum, Integer pageSize);
+    PageUtils<FavoriteArticleVO> listAll(Integer pageNum, Integer pageSize, String username);
 }

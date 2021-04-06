@@ -61,5 +61,8 @@ public class FileInfo implements Serializable {
     @ApiModelProperty(value = "上传时间")
     private Date uploadTime;
 
+    @ApiModelProperty(value = "0-私有，1-公开")
+    private Integer isPublic;
+
 
 }

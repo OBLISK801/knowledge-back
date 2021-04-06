@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author LEI
@@ -16,11 +17,13 @@ public class FavoriteArticleVO {
 
     private Integer tinymceId;
 
-    private String username;
+    private String writeUser;
 
     private String title;
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss ", timezone = "GMT+8")
     private Date time;
+
+    private List<Integer> tags;
 }

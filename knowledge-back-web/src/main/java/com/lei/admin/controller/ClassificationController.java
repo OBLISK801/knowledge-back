@@ -104,5 +104,12 @@ public class ClassificationController {
         return ResponseModel.success(result);
     }
 
+    @ApiOperation("获取叶子分类节点")
+    @GetMapping("/listChildren")
+    public ResponseModel<List<Classification>> listChildren() {
+        List<Classification> result = classificationService.listChildren();
+        return ResponseModel.success(result);
+    }
+
 }
 

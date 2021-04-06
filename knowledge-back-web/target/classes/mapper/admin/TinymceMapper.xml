@@ -19,6 +19,7 @@
         WHERE
             t.is_article = 1
             AND t.state = 1
+            AND t.is_public = 1
         <if test="classificationId != null and classificationId != ''">
             AND t.classification_id = #{classificationId}
         </if>
@@ -47,21 +48,22 @@
 
     <select id="getArticle" resultType="com.lei.admin.vo.ArticleAllVO">
         SELECT
-        t.id,
-        t.title,
-        t.classification_id,
-        t.summary,
-        t.create_time,
-        t.content,
-        su.username,
-        su.avatar,
-        IFNULL(fc.click_count,0) click_count
+            t.id,
+            t.title,
+            t.classification_id,
+            t.summary,
+            t.create_time,
+            t.content,
+            su.username,
+            su.avatar,
+            IFNULL(fc.click_count,0) click_count
         FROM
-        tinymce t
-        LEFT JOIN sys_user su ON t.write_user = su.username
-        LEFT JOIN fiery_count fc ON t.id = fc.resource_id
+            tinymce t
+            LEFT JOIN sys_user su ON t.write_user = su.username
+            LEFT JOIN fiery_count fc ON t.id = fc.resource_id
         WHERE
-        t.is_article = 1
-        AND t.state = 1
+            t.is_article = 1
+            AND t.state = 1
+            AND t.write_user = #{username}
     </select>
 </mapper>

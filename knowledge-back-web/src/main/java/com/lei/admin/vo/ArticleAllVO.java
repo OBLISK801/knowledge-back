@@ -34,5 +34,5 @@ public class ArticleAllVO {
 
     private Integer clickCount;
 
-    List<String> tagName;
+    private List<String> tagName;
 }

@@ -4,11 +4,14 @@
     <select id="listAll" resultType="com.lei.obtain.vo.FavoriteArticleVO">
         SELECT
             t.title,
-            tf.username,
             tf.time,
-            tf.tinymce_id
+            tf.tinymce_id,
+            t.write_user
         FROM
             tinymce_favorites tf
-                JOIN tinymce t ON tf.tinymce_id = t.id
+            JOIN tinymce t ON tf.tinymce_id = t.id
+        WHERE
+            tf.username = #{username}
+            AND tf.status = 1
     </select>
 </mapper>

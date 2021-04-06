@@ -104,20 +104,20 @@ public class TinymceServiceImpl extends ServiceImpl<TinymceMapper, Tinymce> impl
     }
 
     @Override
-    public PageUtils<ArticleVO> listAll(Integer pageNum, Integer pageSize, Integer isArticle, TinymceVO tinymceVO) {
+    public PageUtils<ArticleVO> listAll(Integer pageNum, Integer pageSize, Integer isArticle, String username, TinymceVO tinymceVO) {
         String title = tinymceVO.getTitle();
         Integer classificationId = tinymceVO.getClassificationId();
         String writeUser = tinymceVO.getWriteUser();
         String summary = tinymceVO.getSummary();
         QueryWrapper<Tinymce> wrapper = new QueryWrapper<>();
-        wrapper.eq("is_article", isArticle);
+        wrapper.eq("is_article", isArticle).eq("write_user", username);
         List<Tinymce> tinymce = tinymceMapper.selectList(wrapper);
         List<ArticleVO> articleVOS = new ArrayList<>();
         // 这样只是浅拷贝对于List 和 Map来说是不会有任何作用  BeanUtils.copyProperties(tinymce,articleVOS);
         // 拷贝数组
         for (Tinymce tinymce1 : tinymce) {
             ArticleVO articleVO = new ArticleVO();
-            BeanUtils.copyProperties(tinymce1,articleVO);
+            BeanUtils.copyProperties(tinymce1, articleVO);
             articleVO.setTags(this.listTags(tinymce1.getId()));
             articleVOS.add(articleVO);
         }
@@ -132,7 +132,7 @@ public class TinymceServiceImpl extends ServiceImpl<TinymceMapper, Tinymce> impl
         wrapper.eq("id", tinymceId);
         Tinymce tinymce = tinymceMapper.selectOne(wrapper);
         ArticleVO articleVO = new ArticleVO();
-        BeanUtils.copyProperties(tinymce,articleVO);
+        BeanUtils.copyProperties(tinymce, articleVO);
         articleVO.setTags(this.listTags(tinymceId));
         return articleVO;
     }
@@ -150,7 +150,7 @@ public class TinymceServiceImpl extends ServiceImpl<TinymceMapper, Tinymce> impl
         // 删除的文件可能不存在
         tinymceMapper.deleteById(id);
         QueryWrapper<FieryCount> wrapper = new QueryWrapper<>();
-        wrapper.eq("resource_id",id);
+        wrapper.eq("resource_id", id);
         fieryCountMapper.delete(wrapper);
         this.deleteTags(id);
     }
@@ -161,6 +161,7 @@ public class TinymceServiceImpl extends ServiceImpl<TinymceMapper, Tinymce> impl
         tinymceTagMapper.delete(wrapper);
     }
 
+    @Override
     public List<Integer> listTags(Integer tinymceId) {
         QueryWrapper<TinymceTag> wrapper = new QueryWrapper<>();
         wrapper.eq("tinymce_id", tinymceId);
@@ -173,13 +174,13 @@ public class TinymceServiceImpl extends ServiceImpl<TinymceMapper, Tinymce> impl
     }
 
     @Override
-    public PageUtils<ArticleAllVO> getArticleById(Integer pageNum,Integer pageSize,Integer classificationId) {
+    public PageUtils<ArticleAllVO> getArticleById(Integer pageNum, Integer pageSize, Integer classificationId) {
         List<ArticleAllVO> articleAllVOS = tinymceMapper.getArticleByClassificationId(classificationId);
         for (ArticleAllVO vo : articleAllVOS) {
             List<String> strings = tagMapper.getTagName(vo.getId());
             vo.setTagName(strings);
         }
-        PageUtils<ArticleAllVO> info = new PageUtils<>(pageNum,pageSize);
+        PageUtils<ArticleAllVO> info = new PageUtils<>(pageNum, pageSize);
         info.doPage(articleAllVOS);
         return info;
     }
@@ -193,14 +194,23 @@ public class TinymceServiceImpl extends ServiceImpl<TinymceMapper, Tinymce> impl
     }
 
     @Override
-    public PageUtils<ArticleAllVO> getArticle(Integer pageNum, Integer pageSize) {
-        List<ArticleAllVO> articleAllVOS = tinymceMapper.getArticle();
+    public PageUtils<ArticleAllVO> getArticle(Integer pageNum, Integer pageSize, String username) {
+        List<ArticleAllVO> articleAllVOS = tinymceMapper.getArticle(username);
         for (ArticleAllVO vo : articleAllVOS) {
             List<String> strings = tagMapper.getTagName(vo.getId());
             vo.setTagName(strings);
         }
-        PageUtils<ArticleAllVO> info = new PageUtils<>(pageNum,pageSize);
+        PageUtils<ArticleAllVO> info = new PageUtils<>(pageNum, pageSize);
         info.doPage(articleAllVOS);
         return info;
+    }
+
+    @Override
+    public void publicArticle(Integer id) {
+        Tinymce tinymce = tinymceMapper.selectById(id);
+        tinymce.setIsPublic(1);
+        UpdateWrapper<Tinymce> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id",tinymce.getId());
+        tinymceMapper.update(tinymce,wrapper);
     }
 }

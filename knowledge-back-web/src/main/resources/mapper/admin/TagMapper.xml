@@ -17,4 +17,14 @@
         WHERE
             tt.tinymce_id = #{tinymceId}
     </select>
+
+    <select id="getTopTag" resultType="com.lei.admin.entity.Tag">
+        SELECT
+            t.*
+        FROM
+            file_tag ft
+                JOIN tag t ON ft.tag_id = t.id
+        GROUP BY
+            tag_id;
+    </select>
 </mapper>

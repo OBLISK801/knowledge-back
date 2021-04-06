@@ -1,6 +1,7 @@
 package com.lei.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.lei.admin.entity.ChunkInfo;
 import com.lei.admin.entity.FileInfo;
 import com.lei.admin.mapper.ChunkInfoMapper;
@@ -8,6 +9,7 @@ import com.lei.admin.mapper.FileInfoMapper;
 import com.lei.admin.service.IFileInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lei.admin.utils.FileInfoUtils;
+import com.lei.admin.vo.DownLoadVO;
 import com.lei.admin.vo.FileInfoVO;
 import com.lei.error.SystemCodeEnum;
 import com.lei.error.SystemException;
@@ -23,12 +25,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author GuanyuLei
@@ -56,8 +59,9 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
         String folder = uploadFolder + File.separator + fileInfo.getIdentifier();
         Integer fileSuccess = FileInfoUtils.merge(file, folder, filename);
         fileInfo.setLocation(folder);
+        fileInfo.setIsPublic(0);
         QueryWrapper<ChunkInfo> wrapper = new QueryWrapper<>();
-        wrapper.and(i -> i.eq("identifier",fileInfo.getIdentifier()).eq("filename",fileInfo.getFileName()));
+        wrapper.and(i -> i.eq("identifier", fileInfo.getIdentifier()).eq("filename", fileInfo.getFileName()));
         chunkInfoMapper.delete(wrapper);
         //文件合并成功后，保存记录
         if (fileSuccess == HttpServletResponse.SC_OK) {
@@ -67,7 +71,9 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
         //如果已经存在，则判断是否是同一个项目，同一个项目不用新增记录，否则新增
         else if (fileSuccess == HttpServletResponse.SC_MULTIPLE_CHOICES) {
             QueryWrapper<FileInfo> wrapper1 = new QueryWrapper<>();
-            wrapper1.and(i -> i.eq("identifier",fileInfo.getIdentifier()).eq("file_name",fileInfo.getFileName()));
+            wrapper1.and(i -> i.eq("identifier", fileInfo.getIdentifier())
+                    .eq("file_name", fileInfo.getFileName())
+                    .eq("upload_user", fileInfo.getUploadUser()));
             List<FileInfo> tfList = fileInfoMapper.selectList(wrapper1);
             if (tfList.size() == 0) {
                 fileInfoMapper.insert(fileInfo);
@@ -90,15 +96,16 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
     }
 
     @Override
-    public PageUtils<FileInfo> findFileList(Integer pageNum, Integer pageSize, FileInfoVO fileInfoVO) {
+    public PageUtils<FileInfo> findFileList(Integer pageNum, Integer pageSize, String username, FileInfoVO fileInfoVO) {
         String fileName = fileInfoVO.getFileName();
         String fileType = fileInfoVO.getFileType();
         Integer classificationId = fileInfoVO.getClassificationId();
         Integer totalSize = fileInfoVO.getTotalSize();
         Date beginDate = fileInfoVO.getBeginDate();
         Date endDate = fileInfoVO.getEndDate();
-        List<FileInfo> fileInfos = fileInfoMapper.findFileList(fileName,fileType,classificationId,totalSize,beginDate,endDate);
-        PageUtils<FileInfo> info = new PageUtils<>(pageNum,pageSize);
+        Integer isPublic = fileInfoVO.getIsPublic();
+        List<FileInfo> fileInfos = fileInfoMapper.findFileList(fileName, fileType, classificationId, totalSize, beginDate, endDate, username, isPublic);
+        PageUtils<FileInfo> info = new PageUtils<>(pageNum, pageSize);
         info.doPage(fileInfos);
         return info;
     }
@@ -120,7 +127,7 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
     @Override
     public String preview(Integer id) {
         FileInfo fileInfo = this.findById(id);
-        File file = new File(fileInfo.getLocation()+File.separator+fileInfo.getFileName());
+        File file = new File(fileInfo.getLocation() + File.separator + fileInfo.getFileName());
         String newFileName = "";
         try {
             File newFile = new File("D:\\GraduationProject\\StageOne\\knowledge-back\\upload\\preview");//转换之后文件生成的地址
@@ -129,9 +136,9 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
             }
             String str = fileInfo.getFileName();
             int i = str.indexOf(".");
-            newFileName = str.substring(0,i) + ".pdf";
+            newFileName = str.substring(0, i) + ".pdf";
             System.out.println(newFileName);
-            String path = "D:\\GraduationProject\\StageOne\\knowledge-back\\upload\\preview"+File.separator+newFileName;
+            String path = "D:\\GraduationProject\\StageOne\\knowledge-back\\upload\\preview" + File.separator + newFileName;
             //文件转化
             converter.convert(file).to(new File(path)).execute();
             //使用response,将pdf文件以流的方式发送的前段
@@ -139,5 +146,50 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
             e.printStackTrace();
         }
         return newFileName;
+    }
+
+    @Override
+    public void publicMyFile(Integer id) {
+        FileInfo fileInfo = fileInfoMapper.selectById(id);
+        fileInfo.setIsPublic(1);
+        UpdateWrapper<FileInfo> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id", id);
+        fileInfoMapper.update(fileInfo, wrapper);
+    }
+
+    @Override
+    public PageUtils<FileInfo> findPublicFile(Integer pageNum, Integer pageSize) {
+        QueryWrapper<FileInfo> wrapper = new QueryWrapper<>();
+        wrapper.eq("is_public", 1);
+        List<FileInfo> fileInfos = fileInfoMapper.selectList(wrapper);
+        PageUtils<FileInfo> info = new PageUtils<>(pageNum, pageSize);
+        info.doPage(fileInfos);
+        return info;
+    }
+
+    @Override
+    public PageUtils<FileInfo> findByTagId(Integer id, Integer pageNum, Integer pageSize) {
+        List<FileInfo> fileInfos = fileInfoMapper.findByTagId(id);
+        PageUtils<FileInfo> info = new PageUtils<>(pageNum, pageSize);
+        info.doPage(fileInfos);
+        return info;
+    }
+
+    @Override
+    public PageUtils<FileInfo> findByClassId(Integer id, Integer pageNum, Integer pageSize) {
+        QueryWrapper<FileInfo> wrapper = new QueryWrapper<>();
+        wrapper.eq("classification_id",id).eq("is_public",1);
+        List<FileInfo> fileInfos = fileInfoMapper.selectList(wrapper);
+        PageUtils<FileInfo> info = new PageUtils<>(pageNum, pageSize);
+        info.doPage(fileInfos);
+        return info;
+    }
+
+    @Override
+    public PageUtils<DownLoadVO> findByUser(Integer pageNum, Integer pageSize, String username) {
+        List<DownLoadVO> downLoadVOS = fileInfoMapper.findByUser(username);
+        PageUtils<DownLoadVO> info = new PageUtils<>(pageNum,pageSize);
+        info.doPage(downLoadVOS);
+        return info;
     }
 }
