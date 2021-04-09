@@ -48,4 +48,6 @@ public class ArticleVO implements Serializable {
     private Integer isPublic;
 
     private List<Integer> tags;
+
+    private List<String> tagName;
 }

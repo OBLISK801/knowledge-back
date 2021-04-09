@@ -10,7 +10,7 @@
             <if test="nickname !=null and nickname != ''">
                 and nickname like concat('%',#{nickname},'%')
             </if>
-            <if test="sex !=null and sex != ''">
+            <if test="sex !=null">
                 and sex like concat('%',#{sex},'%')
             </if>
             <if test="email !=null and email != ''">

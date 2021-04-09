@@ -48,6 +48,8 @@
 
 		<elasticsearch.version>7.3.2</elasticsearch.version>
 
+		<mahout.version>0.6</mahout.version>
+
 	</properties>
 
 	<dependencyManagement>
@@ -190,11 +192,21 @@
 				<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
 				<version>2.4.0</version>
 			</dependency>
-<!--			<dependency>-->
-<!--				<groupId>org.elasticsearch.client</groupId>-->
-<!--				<artifactId>elasticsearch-rest-high-level-client</artifactId>-->
-<!--				<version>7.3.2</version>-->
-<!--			</dependency>-->
+			<dependency>
+				<groupId>org.elasticsearch.client</groupId>
+				<artifactId>elasticsearch-rest-high-level-client</artifactId>
+				<version>7.3.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.mahout</groupId>
+				<artifactId>mahout-core</artifactId>
+				<version>${mahout.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.mahout</groupId>
+				<artifactId>mahout-integration</artifactId>
+				<version>${mahout.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

@@ -119,6 +119,7 @@ public class TinymceServiceImpl extends ServiceImpl<TinymceMapper, Tinymce> impl
             ArticleVO articleVO = new ArticleVO();
             BeanUtils.copyProperties(tinymce1, articleVO);
             articleVO.setTags(this.listTags(tinymce1.getId()));
+            articleVO.setTagName(tagMapper.getTagName(tinymce1.getId()));
             articleVOS.add(articleVO);
         }
         PageUtils<ArticleVO> info = new PageUtils<>(pageNum, pageSize);

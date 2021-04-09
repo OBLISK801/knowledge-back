@@ -24,4 +24,6 @@ public interface TinymceMapper extends BaseMapper<Tinymce> {
     ArticleAllVO getArticleById(@Param("tinymceId") Integer tinymceId);
 
     List<ArticleAllVO> getArticle(@Param("username") String username);
+
+    List<ArticleAllVO> getArticleByIds(@Param("ids") int[] ids);
 }

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lei.obtain.mapper.StatisticsMapper">
+
+    <select id="getTopAvg" resultType="com.lei.obtain.vo.AvgRateArticleVO">
+        SELECT
+            tc.tinymce_id,
+            t.title,
+            avg( score ) avg
+        FROM
+            tinymce_score tc
+            JOIN tinymce t ON tc.tinymce_id = t.id
+        GROUP BY
+            tinymce_id
+        HAVING
+            count( tinymce_id ) > 2
+        ORDER BY
+            AVG( score ) DESC
+            LIMIT 0,10
+    </select>
+
+    <select id="getTopLike" resultType="com.lei.obtain.vo.CountLikeVO">
+        SELECT
+            tl.tinymce_id,
+            t.title,
+            count(*) count_like
+        FROM
+            tinymce_like tl
+                JOIN tinymce t ON tl.tinymce_id = t.id
+        WHERE
+            status = 1
+        GROUP BY
+            tl.tinymce_id
+        ORDER BY
+            count(*) DESC
+            LIMIT 0,10
+    </select>
+
+    <select id="getTopFavourite" resultType="com.lei.obtain.vo.CountFavouriteVO">
+        SELECT
+            tf.tinymce_id,
+            t.title,
+            count(*) count_favorite
+        FROM
+            tinymce_favorites tf
+                JOIN tinymce t ON tf.tinymce_id = t.id
+        WHERE
+            status = 1
+        GROUP BY
+            tf.tinymce_id
+        ORDER BY
+            count(*) DESC
+            LIMIT 0,10
+    </select>
+
+    <select id="getTopComment" resultType="com.lei.obtain.vo.CountCommentVO">
+        SELECT
+            ca.classification_name name,
+            COUNT(*) value
+        FROM
+            comment c
+            JOIN tinymce t ON c.article_id = t.id
+            JOIN classification ca ON t.classification_id = ca.id
+        GROUP BY
+            c.article_id
+    </select>
+
+    <select id="getTopClick" resultType="com.lei.obtain.vo.TopClickVO">
+        SELECT
+            sum( click_count ) sum,
+	        happen_time time
+        FROM
+            fiery_count
+        GROUP BY
+            (MONTH ( happen_time )+ DAY ( happen_time ))
+        ORDER BY happen_time
+    </select>
+
+    <select id="getCountPublic" resultType="com.lei.obtain.vo.CountPublicVO">
+        SELECT
+            write_user,
+            COUNT(*) count_public
+        FROM
+            tinymce
+        WHERE
+            is_article = 1
+          AND is_public = 1
+        GROUP BY
+            write_user
+        ORDER BY
+            COUNT(*) DESC
+            LIMIT 0,10
+    </select>
+
+    <select id="getTopUpload" resultType="com.lei.obtain.vo.CountUploadVO">
+        SELECT
+            COUNT(*) sum,
+	        upload_time time
+        FROM
+            file_info
+        GROUP BY
+            (MONTH ( upload_time )+ DAY ( upload_time ))
+        ORDER BY
+            upload_time
+    </select>
+
+    <select id="getTopDownload" resultType="com.lei.obtain.vo.CountDownloadVO">
+        SELECT
+            COUNT(*) sum,
+	        download_time time
+        FROM
+            download_info
+        GROUP BY
+            (MONTH ( download_time )+ DAY ( download_time ))
+        ORDER BY
+            download_time
+    </select>
+</mapper>

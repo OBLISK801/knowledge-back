@@ -66,4 +66,28 @@
             AND t.state = 1
             AND t.write_user = #{username}
     </select>
+
+    <select id="getArticleByIds" resultType="com.lei.admin.vo.ArticleAllVO">
+        SELECT
+            t.id,
+            t.title,
+            t.classification_id,
+            t.summary,
+            t.create_time,
+            t.content,
+            su.username,
+            su.avatar,
+            IFNULL(fc.click_count,0) click_count
+        FROM
+            tinymce t
+                LEFT JOIN sys_user su ON t.write_user = su.username
+                LEFT JOIN fiery_count fc ON t.id = fc.resource_id
+        WHERE
+            t.is_article = 1
+          AND t.state = 1
+          AND t.id in
+        <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
 </mapper>

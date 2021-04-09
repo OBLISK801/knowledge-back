@@ -35,7 +35,7 @@ public class SearchService implements ISearchService {
 
     @Override
     public PageUtils<Map<String, Object>> search(Integer pageNum, Integer pageSize, String state) throws IOException {
-        SearchRequest searchRequest = new SearchRequest("testbbb");
+        SearchRequest searchRequest = new SearchRequest("testccc");
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("title",state);
         sourceBuilder.query(termQueryBuilder);
