@@ -90,4 +90,22 @@
             #{item}
         </foreach>
     </select>
+
+    <select id="getRecentlyRead" resultType="com.lei.admin.vo.RecentlyReadVO">
+        SELECT
+            fc.resource_id,
+            fc.happen_time,
+            t.write_user ,
+            t.title
+        FROM
+            fiery_count fc
+            JOIN tinymce t ON fc.resource_id = t.id
+        WHERE
+            user_name = #{username}
+            AND resource_type = 2
+            AND t.write_user != #{username}
+        ORDER BY
+            happen_time DESC
+            LIMIT 0,5
+    </select>
 </mapper>

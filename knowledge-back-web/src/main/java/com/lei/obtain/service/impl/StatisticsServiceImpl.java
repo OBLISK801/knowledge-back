@@ -58,4 +58,19 @@ public class StatisticsServiceImpl implements IStatisticsService {
     public List<CountDownloadVO> getTopDownload() {
         return statisticsMapper.getTopDownload();
     }
+
+    @Override
+    public List<StatisticsVO> getStatistics(String username) {
+        return statisticsMapper.getStatistics(username);
+    }
+
+    @Override
+    public List<TopClickVO> getUserClick(String username) {
+        return statisticsMapper.getUserClick(username);
+    }
+
+    @Override
+    public List<TopClickVO> getTopClickByTime(TimeVO timeVO) {
+        return statisticsMapper.getTopClickByTime(timeVO.getBeginDate(),timeVO.getEndDate());
+    }
 }

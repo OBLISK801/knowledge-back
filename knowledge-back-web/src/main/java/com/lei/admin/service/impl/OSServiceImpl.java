@@ -12,10 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @Author LEI
@@ -95,7 +92,7 @@ public class OSServiceImpl implements IOSService {
 
         // 关闭OSSClient。
         ossClient.shutdown();
-        String url ="https://"+bucketName+".oss-cn-beijing.aliyuncs.com/"+objectName;
+        String url = "https://" + bucketName + ".oss-cn-beijing.aliyuncs.com/" + objectName;
         FileInfo fileInfo = new FileInfo();
         fileInfo.setFileName(file.getOriginalFilename());
         fileInfo.setIdentifier(uploadId);
@@ -106,6 +103,24 @@ public class OSServiceImpl implements IOSService {
         fileInfo.setUploadUser(userName);
         fileInfo.setUploadTime(new Date());
         fileInfoMapper.insert(fileInfo);
+        return url;
+    }
+
+    @Override
+    public String uploadPhoto(MultipartFile file) {
+        OSS ossClient = OSSUtils.getOssClient();
+        String bucketName = "bysj01";
+        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+        String fileName = "photo" + "/" + uuid + file.getOriginalFilename();
+        String url = "";
+        try {
+            InputStream inputStream = file.getInputStream();
+            ossClient.putObject(bucketName, fileName, inputStream);
+            ossClient.shutdown();
+            url = "https://" + bucketName + ".oss-cn-beijing.aliyuncs.com/" + fileName;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return url;
     }
 }

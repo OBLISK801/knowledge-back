@@ -6,6 +6,7 @@ import com.lei.response.ResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -52,6 +53,12 @@ public class StatisticsController {
         return ResponseModel.success(result);
     }
 
+    @GetMapping("/getTopClickByTime")
+    public ResponseModel<List<TopClickVO>> getTopClickByTime(TimeVO timeVO) {
+        List<TopClickVO> result = statisticsService.getTopClickByTime(timeVO);
+        return ResponseModel.success(result);
+    }
+
     @GetMapping("/getCountPublic")
     public ResponseModel<List<CountPublicVO>> getCountPublic() {
         List<CountPublicVO> result = statisticsService.getCountPublic();
@@ -67,6 +74,18 @@ public class StatisticsController {
     @GetMapping("/getTopDownload")
     public ResponseModel<List<CountDownloadVO>> getTopDownload() {
         List<CountDownloadVO> result = statisticsService.getTopDownload();
+        return ResponseModel.success(result);
+    }
+
+    @GetMapping("/getStatistics")
+    public ResponseModel<List<StatisticsVO>> getStatistics(@RequestParam("username")String username) {
+        List<StatisticsVO> result = statisticsService.getStatistics(username);
+        return ResponseModel.success(result);
+    }
+
+    @GetMapping("/getUserClick")
+    public ResponseModel<List<TopClickVO>> getUserClick(@RequestParam("username")String username) {
+        List<TopClickVO> result = statisticsService.getUserClick(username);
         return ResponseModel.success(result);
     }
 

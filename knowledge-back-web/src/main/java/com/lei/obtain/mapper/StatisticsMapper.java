@@ -1,8 +1,10 @@
 package com.lei.obtain.mapper;
 
 import com.lei.obtain.vo.*;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,4 +29,10 @@ public interface StatisticsMapper {
     List<CountUploadVO> getTopUpload();
 
     List<CountDownloadVO> getTopDownload();
+
+    List<StatisticsVO> getStatistics(@Param("username") String username);
+
+    List<TopClickVO> getUserClick(String username);
+
+    List<TopClickVO> getTopClickByTime(@Param("beginDate") Date beginDate, @Param("endDate") Date endDate);
 }

@@ -147,5 +147,11 @@ public class UserController {
         ExcelKit.$Export(User.class, response).downXlsx(users, false);
     }
 
+    @PutMapping("/changeAvatar")
+    public ResponseModel changeAvatar(@RequestBody AvatarVO avatarVO) {
+        userService.changeAvatar(avatarVO);
+        return ResponseModel.success();
+    }
+
 }
 

@@ -25,4 +25,10 @@ public interface IStatisticsService {
     List<CountUploadVO> getTopUpload();
 
     List<CountDownloadVO> getTopDownload();
+
+    List<StatisticsVO> getStatistics(String username);
+
+    List<TopClickVO> getUserClick(String username);
+
+    List<TopClickVO> getTopClickByTime(TimeVO timeVO);
 }

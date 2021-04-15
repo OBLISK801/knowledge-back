@@ -1,6 +1,7 @@
 package com.lei.admin.service;
 
 import com.lei.admin.vo.OSSFileVO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,4 +13,6 @@ import java.io.IOException;
  */
 public interface IOSService {
     String uploadOSSFile(OSSFileVO ossFileVO) throws IOException;
+
+    String uploadPhoto(MultipartFile file);
 }

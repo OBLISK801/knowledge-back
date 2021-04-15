@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lei.admin.utils.PDFUtils;
 import com.lei.admin.vo.ArticleAllVO;
 import com.lei.admin.vo.ArticleVO;
+import com.lei.admin.vo.RecentlyReadVO;
 import com.lei.admin.vo.TinymceVO;
 import com.lei.obtain.entity.FieryCount;
 import com.lei.obtain.mapper.FieryCountMapper;
@@ -104,13 +105,13 @@ public class TinymceServiceImpl extends ServiceImpl<TinymceMapper, Tinymce> impl
     }
 
     @Override
-    public PageUtils<ArticleVO> listAll(Integer pageNum, Integer pageSize, Integer isArticle, String username, TinymceVO tinymceVO) {
+    public PageUtils<ArticleVO> listAll(Integer pageNum, Integer pageSize, Integer isArticle, String username,String searchText, TinymceVO tinymceVO) {
         String title = tinymceVO.getTitle();
         Integer classificationId = tinymceVO.getClassificationId();
         String writeUser = tinymceVO.getWriteUser();
         String summary = tinymceVO.getSummary();
         QueryWrapper<Tinymce> wrapper = new QueryWrapper<>();
-        wrapper.eq("is_article", isArticle).eq("write_user", username);
+        wrapper.eq("is_article", isArticle).eq("write_user", username).like("title",searchText);
         List<Tinymce> tinymce = tinymceMapper.selectList(wrapper);
         List<ArticleVO> articleVOS = new ArrayList<>();
         // 这样只是浅拷贝对于List 和 Map来说是不会有任何作用  BeanUtils.copyProperties(tinymce,articleVOS);
@@ -213,5 +214,15 @@ public class TinymceServiceImpl extends ServiceImpl<TinymceMapper, Tinymce> impl
         UpdateWrapper<Tinymce> wrapper = new UpdateWrapper<>();
         wrapper.eq("id",tinymce.getId());
         tinymceMapper.update(tinymce,wrapper);
+    }
+
+    @Override
+    public List<RecentlyReadVO> getRecentlyRead(String username) {
+        List<RecentlyReadVO> recentlyReadVOS = tinymceMapper.getRecentlyRead(username);
+        for (RecentlyReadVO vo : recentlyReadVOS) {
+            List<String> strings = tagMapper.getTagName(vo.getResourceId());
+            vo.setTagName(strings);
+        }
+        return recentlyReadVOS;
     }
 }

@@ -5,10 +5,7 @@ import com.lei.system.entity.Menu;
 import com.lei.system.entity.Role;
 import com.lei.system.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.lei.system.vo.MenuNodeVO;
-import com.lei.system.vo.UserEditVO;
-import com.lei.system.vo.UserInfoVO;
-import com.lei.system.vo.UserVO;
+import com.lei.system.vo.*;
 import com.lei.utils.PageUtils;
 
 import java.util.List;
@@ -51,4 +48,6 @@ public interface IUserService extends IService<User> {
     List<Long> roles(Long id) throws SystemException;
 
     List<User> findAll();
+
+    void changeAvatar(AvatarVO avatarVO);
 }

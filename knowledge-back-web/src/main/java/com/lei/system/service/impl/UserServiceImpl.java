@@ -15,10 +15,7 @@ import com.lei.system.mapper.*;
 import com.lei.system.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lei.system.utils.MenuTreeBuilder;
-import com.lei.system.vo.MenuNodeVO;
-import com.lei.system.vo.UserEditVO;
-import com.lei.system.vo.UserInfoVO;
-import com.lei.system.vo.UserVO;
+import com.lei.system.vo.*;
 import com.lei.utils.MD5Utils;
 import com.lei.utils.PageUtils;
 import io.swagger.annotations.Example;
@@ -196,7 +193,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setSalt(salt);
         user.setType(UserTypeEnum.SYSTEM_USER.getTypeCode());//用户默认是普通用户
         user.setStatus(UserStatusEnum.AVAILABLE.getStatusCode());//添加的用户默认启用
-        user.setAvatar("https://i.loli.net/2021/02/18/YGMVbsFklj5I9rd.png");
+        user.setAvatar("https://bysj01.oss-cn-beijing.aliyuncs.com/avatar/11.jpg");
         userMapper.insert(user);
     }
 
@@ -339,5 +336,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public List<User> findAll() {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         return userMapper.selectList(wrapper);
+    }
+
+    @Override
+    public void changeAvatar(AvatarVO avatarVO) {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("username",avatarVO.getUsername());
+        User user = userMapper.selectOne(wrapper);
+        user.setAvatar(avatarVO.getUrl());
+        userMapper.updateById(user);
     }
 }

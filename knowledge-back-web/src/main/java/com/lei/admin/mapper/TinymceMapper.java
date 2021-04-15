@@ -4,6 +4,7 @@ import com.lei.admin.entity.Tinymce;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lei.admin.vo.ArticleAllVO;
 import com.lei.admin.vo.ArticleVO;
+import com.lei.admin.vo.RecentlyReadVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -26,4 +27,6 @@ public interface TinymceMapper extends BaseMapper<Tinymce> {
     List<ArticleAllVO> getArticle(@Param("username") String username);
 
     List<ArticleAllVO> getArticleByIds(@Param("ids") int[] ids);
+
+    List<RecentlyReadVO> getRecentlyRead(@Param("username") String username);
 }

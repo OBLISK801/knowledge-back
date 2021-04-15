@@ -2,6 +2,7 @@ package com.lei.system.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -18,6 +19,8 @@ public class RoleVO {
 
     private String remark;
 
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dds", timezone = "GMT+8")
     private Date createTime;
 
     private Date modifiedTime;

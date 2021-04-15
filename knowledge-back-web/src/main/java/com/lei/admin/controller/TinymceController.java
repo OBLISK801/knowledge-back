@@ -3,10 +3,7 @@ package com.lei.admin.controller;
 
 import com.lei.admin.entity.Tinymce;
 import com.lei.admin.service.ITinymceService;
-import com.lei.admin.vo.ArticleAllVO;
-import com.lei.admin.vo.ArticleVO;
-import com.lei.admin.vo.FileInfoVO;
-import com.lei.admin.vo.TinymceVO;
+import com.lei.admin.vo.*;
 import com.lei.obtain.service.IFieryCountService;
 import com.lei.response.ResponseModel;
 import com.lei.utils.PageUtils;
@@ -16,6 +13,8 @@ import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.service.ResponseMessage;
+
+import java.util.List;
 
 /**
  * <p>
@@ -63,8 +62,9 @@ public class TinymceController {
                                                        @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
                                                        @RequestParam(value = "isArticle", defaultValue = "0") Integer isArticle,
                                                        @RequestParam(value = "username") String username,
+                                                       @RequestParam(value = "searchText") String searchText,
                                                        TinymceVO tinymceVO) {
-        PageUtils<ArticleVO> result = tinymceService.listAll(pageNum, pageSize, isArticle, username, tinymceVO);
+        PageUtils<ArticleVO> result = tinymceService.listAll(pageNum, pageSize, isArticle, username, searchText, tinymceVO);
         return ResponseModel.success(result);
     }
 
@@ -128,6 +128,14 @@ public class TinymceController {
         tinymceService.publicArticle(id);
         return ResponseModel.success();
     }
+
+    @GetMapping("/getRecentlyRead")
+    @ApiOperation("获取最近阅读文章")
+    public ResponseModel<List<RecentlyReadVO>> getRecentlyRead(@RequestParam(value = "username") String username) {
+        List<RecentlyReadVO> result = tinymceService.getRecentlyRead(username);
+        return ResponseModel.success(result);
+    }
+
 
 
 }

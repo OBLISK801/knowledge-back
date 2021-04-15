@@ -26,7 +26,7 @@
             count(*) count_like
         FROM
             tinymce_like tl
-                JOIN tinymce t ON tl.tinymce_id = t.id
+            JOIN tinymce t ON tl.tinymce_id = t.id
         WHERE
             status = 1
         GROUP BY
@@ -55,14 +55,16 @@
 
     <select id="getTopComment" resultType="com.lei.obtain.vo.CountCommentVO">
         SELECT
-            ca.classification_name name,
-            COUNT(*) value
+            ca.classification_name NAME,
+            COUNT(*) VALUE
         FROM
-            comment c
+            COMMENT c
             JOIN tinymce t ON c.article_id = t.id
             JOIN classification ca ON t.classification_id = ca.id
         GROUP BY
             c.article_id
+        ORDER BY COUNT(*) DESC
+            LIMIT 0,7
     </select>
 
     <select id="getTopClick" resultType="com.lei.obtain.vo.TopClickVO">
@@ -71,9 +73,11 @@
 	        happen_time time
         FROM
             fiery_count
+        WHERE happen_time &gt;= DATE_SUB(CURDATE(),INTERVAL 10 DAY)
         GROUP BY
             (MONTH ( happen_time )+ DAY ( happen_time ))
-        ORDER BY happen_time
+        ORDER BY
+            happen_time
     </select>
 
     <select id="getCountPublic" resultType="com.lei.obtain.vo.CountPublicVO">
@@ -98,6 +102,7 @@
 	        upload_time time
         FROM
             file_info
+        WHERE upload_time &gt;= DATE_SUB(CURDATE(),INTERVAL 10 DAY)
         GROUP BY
             (MONTH ( upload_time )+ DAY ( upload_time ))
         ORDER BY
@@ -110,9 +115,48 @@
 	        download_time time
         FROM
             download_info
+        WHERE download_time &gt;= DATE_SUB(CURDATE(),INTERVAL 10 DAY)
         GROUP BY
             (MONTH ( download_time )+ DAY ( download_time ))
         ORDER BY
             download_time
     </select>
+
+    <select id="getStatistics" resultType="com.lei.obtain.vo.StatisticsVO">
+        SELECT 1 id,write_user username,COUNT(*) sum FROM tinymce WHERE write_user = #{username} GROUP BY write_user
+        UNION
+        SELECT 2,upload_user username,COUNT(*) sum FROM file_info WHERE upload_user = #{username} GROUP BY upload_user
+        UNION
+        SELECT 3,username,COUNT(*) sum FROM tinymce_favorites WHERE username = #{username} GROUP BY username;
+    </select>
+
+    <select id="getUserClick" resultType="com.lei.obtain.vo.TopClickVO">
+        SELECT
+            happen_time time,
+            count(*) sum
+        FROM
+            fiery_count
+        WHERE
+            happen_time &gt;= DATE_SUB( CURDATE(), INTERVAL 7 DAY )
+            AND user_name = #{username}
+        GROUP BY
+            (YEAR ( happen_time )+ MONTH ( happen_time )+ DAY ( happen_time ))
+        ORDER BY
+            happen_time
+    </select>
+
+    <select id="getTopClickByTime" resultType="com.lei.obtain.vo.TopClickVO">
+        SELECT
+            sum( click_count ) sum,
+	        happen_time time
+        FROM
+            fiery_count
+        WHERE happen_time BETWEEN #{beginDate} AND #{endDate}
+        GROUP BY
+            (
+            MONTH ( happen_time )+ DAY ( happen_time ))
+        ORDER BY
+            happen_time
+    </select>
+
 </mapper>

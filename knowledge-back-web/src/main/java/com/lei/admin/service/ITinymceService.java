@@ -4,6 +4,7 @@ import com.lei.admin.entity.Tinymce;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lei.admin.vo.ArticleAllVO;
 import com.lei.admin.vo.ArticleVO;
+import com.lei.admin.vo.RecentlyReadVO;
 import com.lei.admin.vo.TinymceVO;
 import com.lei.utils.PageUtils;
 import io.swagger.models.auth.In;
@@ -25,7 +26,7 @@ public interface ITinymceService extends IService<Tinymce> {
 
     Integer complete(Tinymce tinymce);
 
-    PageUtils<ArticleVO> listAll(Integer pageNum, Integer pageSize, Integer isArticle, String username, TinymceVO tinymceVO);
+    PageUtils<ArticleVO> listAll(Integer pageNum, Integer pageSize, Integer isArticle, String username, String searchText, TinymceVO tinymceVO);
 
     ArticleVO listById(Integer tinymceId);
 
@@ -42,4 +43,6 @@ public interface ITinymceService extends IService<Tinymce> {
     void publicArticle(Integer id);
 
     List<Integer> listTags(Integer tinymceId);
+
+    List<RecentlyReadVO> getRecentlyRead(String username);
 }
