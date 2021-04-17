@@ -74,4 +74,9 @@ public class TinymceFavoritesServiceImpl extends ServiceImpl<TinymceFavoritesMap
         info.doPage(favoriteArticleVOS);
         return info;
     }
+
+    @Override
+    public Integer getNum(Integer tinymceId) {
+        return tinymceFavoritesMapper.getNum(tinymceId);
+    }
 }

@@ -137,6 +137,14 @@ public class TinymceController {
     }
 
 
+    @GetMapping("/getTopRead")
+    @ApiOperation("获取分类推荐阅读文章")
+    public ResponseModel<List<RecentlyReadVO>> getTopRead(@RequestParam("name")String name,
+                                                          @RequestParam("level")Integer level) {
+        List<RecentlyReadVO> result = tinymceService.getTopRead(name,level);
+        return ResponseModel.success(result);
+    }
+
 
 }
 

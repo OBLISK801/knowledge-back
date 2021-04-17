@@ -27,4 +27,21 @@
         GROUP BY
             tag_id;
     </select>
+
+    <select id="listTopTag" resultType="com.lei.admin.vo.WordCloudDTO">
+        SELECT
+            tag_id id,
+            t.tag_name NAME,
+            COUNT(*) VALUE
+        FROM
+            tinymce_tag tt
+            JOIN tag t ON tt.tag_id = t.id
+        WHERE
+            tinymce_id IN ( SELECT id FROM tinymce WHERE is_article = 1 )
+        GROUP BY
+            tag_id
+        ORDER BY
+            COUNT(*) DESC
+            LIMIT 0,20;
+    </select>
 </mapper>

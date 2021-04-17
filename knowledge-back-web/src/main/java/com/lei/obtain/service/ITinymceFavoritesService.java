@@ -23,4 +23,6 @@ public interface ITinymceFavoritesService extends IService<TinymceFavorites> {
     TinymceFavorites isFavoriteArticle(TinymceFavoritesVO favoritesVO);
 
     PageUtils<FavoriteArticleVO> listAll(Integer pageNum, Integer pageSize, String username);
+
+    Integer getNum(Integer tinymceId);
 }

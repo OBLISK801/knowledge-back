@@ -22,5 +22,6 @@ public interface TagMapper extends BaseMapper<Tag> {
 
     List<String> getTagName(@Param("tinymceId") Integer tinymceId);
 
-    List<Tag> getTopTag();
+
+    List<WordCloudDTO> listTopTag();
 }

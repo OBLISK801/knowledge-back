@@ -54,11 +54,20 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements ITagS
     }
 
     @Override
-    public void add(TagVO tagVO) {
-        Tag tag = new Tag();
-        BeanUtils.copyProperties(tagVO,tag);
-        tag.setCreateTime(new Date());
-        tagMapper.insert(tag);
+    public Boolean add(TagVO tagVO) {
+        QueryWrapper<Tag> wrapper = new QueryWrapper<>();
+        wrapper.eq("tag_name",tagVO.getTagName());
+        Tag oldTag = tagMapper.selectOne(wrapper);
+        if (oldTag == null) {
+            Tag tag = new Tag();
+            BeanUtils.copyProperties(tagVO,tag);
+            tag.setCreateTime(new Date());
+            tagMapper.insert(tag);
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     @Override
@@ -124,7 +133,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements ITagS
     }
 
     @Override
-    public List<Tag> getTopTag() {
-        return null;
+    public List<WordCloudDTO> getTopTag() {
+        return tagMapper.listTopTag();
     }
 }

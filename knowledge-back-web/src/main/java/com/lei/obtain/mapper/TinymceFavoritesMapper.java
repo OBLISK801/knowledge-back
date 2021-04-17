@@ -19,4 +19,6 @@ import java.util.List;
 @Repository
 public interface TinymceFavoritesMapper extends BaseMapper<TinymceFavorites> {
     List<FavoriteArticleVO> listAll(@Param("username")String username);
+
+    Integer getNum(@Param("tinymceId") Integer tinymceId);
 }

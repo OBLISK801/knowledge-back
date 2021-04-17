@@ -41,9 +41,13 @@ public class TagController {
 
     @PostMapping("/add")
     @ApiOperation("添加标签")
-    public ResponseModel add(@RequestBody TagVO tagVO) {
-        tagService.add(tagVO);
-        return ResponseModel.success();
+    public ResponseModel<String> add(@RequestBody TagVO tagVO) {
+        if (tagService.add(tagVO)) {
+            return ResponseModel.success("成功");
+        } else {
+            return ResponseModel.success("该标签已存在");
+        }
+
     }
 
     @DeleteMapping("/delete/{id}")
@@ -91,8 +95,8 @@ public class TagController {
 
     @GetMapping("/getTopTag")
     @ApiOperation("获取排名最高的tag")
-    public ResponseModel<List<Tag>> getTopTag() {
-        List<Tag> result = tagService.getTopTag();
+    public ResponseModel<List<WordCloudDTO>> getTopTag() {
+        List<WordCloudDTO> result = tagService.getTopTag();
         return ResponseModel.success(result);
     }
 

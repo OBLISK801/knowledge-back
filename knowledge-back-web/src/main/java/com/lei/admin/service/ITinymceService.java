@@ -45,4 +45,6 @@ public interface ITinymceService extends IService<Tinymce> {
     List<Integer> listTags(Integer tinymceId);
 
     List<RecentlyReadVO> getRecentlyRead(String username);
+
+    List<RecentlyReadVO> getTopRead(String name, Integer level);
 }

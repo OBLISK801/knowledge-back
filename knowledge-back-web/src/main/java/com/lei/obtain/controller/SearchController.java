@@ -32,4 +32,12 @@ public class SearchController {
         PageUtils<Map<String,Object>> result = searchService.search(pageNum,pageSize,state);
         return ResponseModel.success(result);
     }
+
+    @GetMapping("/searchPdf")
+    public ResponseModel<PageUtils<Map<String,Object>>> searchPdf(@RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
+                                                               @RequestParam(value = "pageSize",defaultValue = "10")Integer pageSize,
+                                                               @RequestParam(value = "state")String state) throws IOException {
+        PageUtils<Map<String,Object>> result = searchService.searchPdf(pageNum,pageSize,state);
+        return ResponseModel.success(result);
+    }
 }

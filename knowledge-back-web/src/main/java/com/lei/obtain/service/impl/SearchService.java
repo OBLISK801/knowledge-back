@@ -72,4 +72,44 @@ public class SearchService implements ISearchService {
         info.doPage(list);
         return info;
     }
+
+    @Override
+    public PageUtils<Map<String, Object>> searchPdf(Integer pageNum, Integer pageSize, String state) throws IOException {
+        SearchRequest searchRequest = new SearchRequest("testtwo");
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("content",state);
+        sourceBuilder.query(termQueryBuilder);
+        sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
+
+        //高亮
+        HighlightBuilder highlightBuilder = new HighlightBuilder();
+        highlightBuilder.field("content");
+        highlightBuilder.preTags("<span style='color:red'>");
+        highlightBuilder.postTags("</span>");
+        sourceBuilder.highlighter(highlightBuilder);
+
+
+        searchRequest.source(sourceBuilder);
+        SearchResponse search = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        // 解析结果
+        ArrayList<Map<String, Object>> list = new ArrayList<>();
+        for (SearchHit hit : search.getHits().getHits()) {
+            // 解析高亮字段
+            Map<String, HighlightField> highlightFields = hit.getHighlightFields();
+            HighlightField title = highlightFields.get("content");
+            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+            if (title != null) {
+                Text[] fragments = title.fragments();
+                StringBuilder n_title = new StringBuilder();
+                for (Text fragment : fragments) {
+                    n_title.append(fragment);
+                }
+                sourceAsMap.put("content", n_title.toString());
+            }
+            list.add(hit.getSourceAsMap());
+        }
+        PageUtils<Map<String, Object>> info = new PageUtils<>(pageNum,pageSize);
+        info.doPage(list);
+        return info;
+    }
 }

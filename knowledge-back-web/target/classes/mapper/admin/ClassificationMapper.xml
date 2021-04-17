@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lei.admin.mapper.ClassificationMapper">
+    <select id="getNumOne" resultType="int">
+        SELECT COUNT(*) num FROM tinymce WHERE is_article = 1 AND is_public = 1;
+    </select>
+
+    <select id="getNumTwo" resultType="int">
+        SELECT COUNT(*) num FROM tinymce WHERE is_article = 1 AND is_public = 1 AND classification_id IN
+                    (SELECT id FROM classification WHERE parent_id = #{id});
+    </select>
+
+    <select id="getNumThree" resultType="int">
+        SELECT COUNT(*) num FROM tinymce WHERE is_article = 1 AND is_public = 1 AND classification_id = #{id};
+    </select>
 
 </mapper>

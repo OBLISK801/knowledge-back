@@ -108,4 +108,56 @@
             happen_time DESC
             LIMIT 0,5
     </select>
+
+    <select id="getTopReadOne" resultType="com.lei.admin.vo.RecentlyReadVO">
+        SELECT
+            fc.resource_id,
+            fc.happen_time,
+            t.write_user,
+            t.title
+        FROM
+            fiery_count fc
+            JOIN tinymce t ON fc.resource_id = t.id
+        WHERE
+            resource_type = 2
+        ORDER BY
+            fc.click_count DESC
+            LIMIT 0,3;
+    </select>
+    <select id="getTopReadTwo" resultType="com.lei.admin.vo.RecentlyReadVO">
+        SELECT
+            fc.resource_id,
+            fc.happen_time,
+            t.write_user,
+            t.title
+        FROM
+            fiery_count fc
+            JOIN tinymce t ON fc.resource_id = t.id
+        WHERE
+            resource_type = 2
+          AND t.classification_id IN ( SELECT id FROM classification WHERE parent_id = #{id} )
+        ORDER BY
+            fc.click_count DESC
+            LIMIT 0,3;
+    </select>
+
+    <select id="getTopReadThree" resultType="com.lei.admin.vo.RecentlyReadVO">
+        SELECT
+            fc.resource_id,
+            fc.happen_time,
+            t.write_user,
+            t.title
+        FROM
+            fiery_count fc
+                JOIN tinymce t ON fc.resource_id = t.id
+        WHERE
+            resource_type = 2
+          AND classification_id = #{id}
+        ORDER BY
+            fc.click_count DESC
+            LIMIT 0,3;
+    </select>
+
+
+
 </mapper>

@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lei.admin.entity.Tinymce;
 import com.lei.admin.mapper.TinymceMapper;
+import com.lei.obtain.utils.PdfUtils;
+import com.lei.obtain.vo.PdfVO;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.impl.model.jdbc.MySQLJDBCDataModel;
@@ -23,11 +25,15 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.ElasticsearchClient;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.AnalyzeRequest;
+import org.elasticsearch.client.indices.AnalyzeResponse;
+import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +56,7 @@ public class KnowledgeApplicationTests {
         wrapper.eq("is_article",1).eq("is_public",1);
         List<Tinymce> tinymceList = tinymceMapper.selectList(wrapper);
         for (Tinymce tinymce : tinymceList) {
-            IndexRequest request = new IndexRequest("testccc");
+            IndexRequest request = new IndexRequest("testone");
             request.id(String.valueOf(tinymce.getId()));
             request.source(JSON.toJSONString(tinymce), XContentType.JSON);
             IndexResponse indexResponse = restHighLevelClient.index(request, RequestOptions.DEFAULT);
@@ -107,4 +113,26 @@ public class KnowledgeApplicationTests {
             System.out.println(j);
         }
     }
+
+    @Test
+    public void testPdfBox() throws IOException {
+        String path = "D:\\GraduationProject\\StageOne\\knowledge-back\\upload\\preview";
+        File file = new File(path);
+        String[] fileLists = file.list();
+        assert fileLists != null;
+        List<PdfVO> pdfVOS = new ArrayList<>();
+        for (String fileList : fileLists) {
+            pdfVOS.add(PdfUtils.READPDF(path+File.separator+fileList));
+        }
+        for (int i = 0; i < pdfVOS.size(); i++) {
+            IndexRequest request = new IndexRequest("testtwo");
+            request.id(String.valueOf(i));
+            request.source(JSON.toJSONString(pdfVOS.get(i)), XContentType.JSON);
+            IndexResponse indexResponse = restHighLevelClient.index(request, RequestOptions.DEFAULT);
+        }
+    }
+
+
+
+
 }

@@ -23,7 +23,7 @@ public interface ITagService extends IService<Tag> {
 
     PageUtils<Tag> listAll(Integer pageNum, Integer pageSize);
 
-    void add(TagVO tagVO);
+    Boolean add(TagVO tagVO);
 
     void delete(Integer tagId);
 
@@ -37,5 +37,5 @@ public interface ITagService extends IService<Tag> {
 
     List<WordCloudDTO> listWordCloudData();
 
-    List<Tag> getTopTag();
+    List<WordCloudDTO> getTopTag();
 }

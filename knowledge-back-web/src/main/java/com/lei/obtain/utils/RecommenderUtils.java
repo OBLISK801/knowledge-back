@@ -23,6 +23,7 @@ import java.util.List;
 public class RecommenderUtils {
 
     public static int[] recommendByUser(long userId) throws ClassNotFoundException, TasteException {
+        // 根据用户协同过滤，根据用户的相似度，推荐相应的item
         Class.forName("com.mysql.cj.jdbc.Driver");
         MysqlDataSource dataSource = new MysqlDataSource();
         dataSource.setServerName("localhost");
@@ -30,11 +31,16 @@ public class RecommenderUtils {
         dataSource.setPassword("sql2008");
         dataSource.setDatabaseName("knowledge-dev");
         dataSource.setUrl("jdbc:mysql://localhost:3306/knowledge-dev?characterEncoding=utf-8&serverTimezone=Asia/Shanghai");
+        //获取模型
         JDBCDataModel dataModel = new MySQLJDBCDataModel(dataSource,"user_score","user_id","tinymce_id","score","time");
         DataModel model = dataModel;
+        //计算相似度
         UserSimilarity similarity = new PearsonCorrelationSimilarity(model);
+        //计算阈值,选择邻近的2个用户
         UserNeighborhood neighborhood = new NearestNUserNeighborhood(2 ,similarity,model);
+        //推荐集合
         Recommender recommender = new GenericUserBasedRecommender(model, neighborhood, similarity);
+        //推荐数量 为n的一个合集,这里数量可以修改
         List<RecommendedItem> recommendedItems = recommender.recommend(userId,10);
         int[] kl_idArray = new int[recommendedItems.size()];
         for (int i=0;i<recommendedItems.size();i++){

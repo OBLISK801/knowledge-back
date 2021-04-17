@@ -24,6 +24,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -66,6 +67,25 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
         //文件合并成功后，保存记录
         if (fileSuccess == HttpServletResponse.SC_OK) {
             fileInfoMapper.insert(fileInfo);
+            if ("application/msword".equals(fileInfo.getFileType()) ||
+                    "application/vnd.openxmlformats-officedocument.presentationml.presentation".equals(fileInfo.getFileType()) ||
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet".equals(fileInfo.getFileType())) {
+                // 插入后直接返回自增id
+                this.preview(fileInfo.getId());
+            }
+            if ("application/pdf".equals(fileInfo.getFileType())) {
+                try {
+                    FileInputStream fileInputStream = new FileInputStream(file);
+                    FileOutputStream fileOutputStream = new FileOutputStream(
+                            "D:\\GraduationProject\\StageOne\\knowledge-back\\upload\\preview"+File.separator+filename);
+                    IOUtils.copy(fileInputStream, fileOutputStream);
+                    IOUtils.closeQuietly(fileInputStream);
+                    IOUtils.closeQuietly(fileOutputStream);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
             response.setStatus(HttpServletResponse.SC_OK);
         }
         //如果已经存在，则判断是否是同一个项目，同一个项目不用新增记录，否则新增
@@ -127,6 +147,7 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
     @Override
     public String preview(Integer id) {
         FileInfo fileInfo = this.findById(id);
+        // 获得上传的文件
         File file = new File(fileInfo.getLocation() + File.separator + fileInfo.getFileName());
         String newFileName = "";
         try {
@@ -139,8 +160,16 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
             newFileName = str.substring(0, i) + ".pdf";
             System.out.println(newFileName);
             String path = "D:\\GraduationProject\\StageOne\\knowledge-back\\upload\\preview" + File.separator + newFileName;
-            //文件转化
-            converter.convert(file).to(new File(path)).execute();
+            // 转换过的文件不需要再转换
+            File fileExist = new File(path);
+            if (!fileExist.exists()) {
+                System.out.println("开始转化");
+                //文件转化
+                converter.convert(file).to(new File(path)).execute();
+            } else {
+                System.out.println("转换文件已经存在，直接返回");
+            }
+
             //使用response,将pdf文件以流的方式发送的前段
         } catch (Exception e) {
             e.printStackTrace();

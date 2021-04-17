@@ -2,8 +2,10 @@ package com.lei.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.lei.admin.entity.Classification;
 import com.lei.admin.entity.Tinymce;
 import com.lei.admin.entity.TinymceTag;
+import com.lei.admin.mapper.ClassificationMapper;
 import com.lei.admin.mapper.TagMapper;
 import com.lei.admin.mapper.TinymceMapper;
 import com.lei.admin.mapper.TinymceTagMapper;
@@ -46,6 +48,8 @@ public class TinymceServiceImpl extends ServiceImpl<TinymceMapper, Tinymce> impl
     private TinymceTagMapper tinymceTagMapper;
     @Autowired
     private FieryCountMapper fieryCountMapper;
+    @Autowired
+    private ClassificationMapper classificationMapper;
     @Autowired
     private TagMapper tagMapper;
     @Value("D:\\GraduationProject\\StageOne\\knowledge-back\\summary")
@@ -225,4 +229,29 @@ public class TinymceServiceImpl extends ServiceImpl<TinymceMapper, Tinymce> impl
         }
         return recentlyReadVOS;
     }
+
+    @Override
+    public List<RecentlyReadVO> getTopRead(String name, Integer level) {
+        QueryWrapper<Classification> wrapper = new QueryWrapper<>();
+        wrapper.eq("classification_name",name);
+        Classification classification = classificationMapper.selectOne(wrapper);
+        List<RecentlyReadVO> recentlyReadVOS = new ArrayList<>();
+        if (level == 1) {
+            List<RecentlyReadVO> list = tinymceMapper.getTopReadOne();
+            recentlyReadVOS.addAll(list);
+        } else if (level == 2) {
+            List<RecentlyReadVO> list = tinymceMapper.getTopReadTwo(classification.getId());
+            recentlyReadVOS.addAll(list);
+        } else {
+            List<RecentlyReadVO> list = tinymceMapper.getTopReadThree(classification.getId());
+            recentlyReadVOS.addAll(list);
+        }
+        for (RecentlyReadVO vo : recentlyReadVOS) {
+            List<String> strings = tagMapper.getTagName(vo.getResourceId());
+            vo.setTagName(strings);
+        }
+        return recentlyReadVOS;
+    }
+
+
 }

@@ -8,6 +8,7 @@ import com.lei.admin.mapper.ClassificationMapper;
 import com.lei.admin.service.IClassificationService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lei.admin.utils.ClassificationBuilder;
+import com.lei.admin.vo.ClassVO;
 import com.lei.admin.vo.ClassificationNodeVO;
 import com.lei.admin.vo.GraphDataVO;
 import com.lei.admin.vo.GraphLinksVO;
@@ -64,7 +65,15 @@ public class ClassificationServiceImpl extends ServiceImpl<ClassificationMapper,
         if (classification == null) {
             throw new SystemException(SystemCodeEnum.PARAMETER_ERROR, "要删除的分类不存在");
         }
-        classificationMapper.deleteById(id);
+        Integer level = classification.getLevel();
+        if (level == 3) {
+            classificationMapper.deleteById(id);
+        } else if (level == 2) {
+            QueryWrapper<Classification> wrapper = new QueryWrapper<>();
+            wrapper.eq("parent_id",id);
+            classificationMapper.delete(wrapper);
+            classificationMapper.deleteById(id);
+        }
     }
 
     @Override
@@ -132,5 +141,26 @@ public class ClassificationServiceImpl extends ServiceImpl<ClassificationMapper,
         QueryWrapper<Classification> wrapper = new QueryWrapper<>();
         wrapper.eq("level",3);
         return classificationMapper.selectList(wrapper);
+    }
+
+    @Override
+    public ClassVO listByNameLevel(String name, Integer level) {
+        QueryWrapper<Classification> wrapper = new QueryWrapper<>();
+        wrapper.eq("classification_name",name);
+        Classification classification = classificationMapper.selectOne(wrapper);
+        ClassVO classVO = new ClassVO();
+        classVO.setClassificationName(classification.getClassificationName());
+        classVO.setClassificationIntroduction(classification.getClassificationIntroduction());
+        if (level == 1) {
+            Integer num = classificationMapper.getNumOne();
+            classVO.setNum(num);
+        } else if (level == 2) {
+            Integer num = classificationMapper.getNumTwo(classification.getId());
+            classVO.setNum(num);
+        } else {
+            Integer num = classificationMapper.getNumThree(classification.getId());
+            classVO.setNum(num);
+        }
+        return classVO;
     }
 }

@@ -12,4 +12,6 @@ import java.util.Map;
  */
 public interface ISearchService {
     PageUtils<Map<String, Object>> search(Integer pageNum, Integer pageSize, String state) throws IOException;
+
+    PageUtils<Map<String, Object>> searchPdf(Integer pageNum, Integer pageSize, String state) throws IOException;
 }

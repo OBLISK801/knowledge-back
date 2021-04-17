@@ -29,4 +29,10 @@ public interface TinymceMapper extends BaseMapper<Tinymce> {
     List<ArticleAllVO> getArticleByIds(@Param("ids") int[] ids);
 
     List<RecentlyReadVO> getRecentlyRead(@Param("username") String username);
+
+    List<RecentlyReadVO> getTopReadOne();
+
+    List<RecentlyReadVO> getTopReadTwo(@Param("id")Integer id);
+
+    List<RecentlyReadVO> getTopReadThree(@Param("id")Integer id);
 }

@@ -3,6 +3,7 @@ package com.lei.admin.controller;
 
 import com.lei.admin.entity.Classification;
 import com.lei.admin.service.IClassificationService;
+import com.lei.admin.vo.ClassVO;
 import com.lei.admin.vo.ClassificationNodeVO;
 import com.lei.admin.vo.GraphDataVO;
 import com.lei.admin.vo.GraphLinksVO;
@@ -109,6 +110,13 @@ public class ClassificationController {
     public ResponseModel<List<Classification>> listChildren() {
         List<Classification> result = classificationService.listChildren();
         return ResponseModel.success(result);
+    }
+
+    @GetMapping("/listByNameLevel")
+    public ResponseModel<ClassVO> listByNameLevel(@RequestParam("name")String name,
+                                                  @RequestParam("level")Integer level) {
+        ClassVO classVO = classificationService.listByNameLevel(name,level);
+        return ResponseModel.success(classVO);
     }
 
 }

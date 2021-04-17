@@ -207,6 +207,12 @@
 				<artifactId>mahout-integration</artifactId>
 				<version>${mahout.version}</version>
 			</dependency>
+            <!--pdfbox-->
+			<dependency>
+				<groupId>org.apache.pdfbox</groupId>
+				<artifactId>pdfbox-app</artifactId>
+				<version>1.8.10</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

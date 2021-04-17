@@ -59,5 +59,14 @@ public class TinymceFavoritesController {
         PageUtils<FavoriteArticleVO> result = tinymceFavoritesService.listAll(pageNum, pageSize, username);
         return ResponseModel.success(result);
     }
+
+    @GetMapping("/getNum")
+    public ResponseModel<Integer> getNum(@RequestParam("tinymceId")Integer tinymceId) {
+        Integer num = tinymceFavoritesService.getNum(tinymceId);
+        if (num == null) {
+            return ResponseModel.success(0);
+        }
+        return ResponseModel.success(num);
+    }
 }
 

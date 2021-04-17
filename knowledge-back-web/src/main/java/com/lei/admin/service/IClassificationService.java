@@ -2,6 +2,7 @@ package com.lei.admin.service;
 
 import com.lei.admin.entity.Classification;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lei.admin.vo.ClassVO;
 import com.lei.admin.vo.ClassificationNodeVO;
 import com.lei.admin.vo.GraphDataVO;
 import com.lei.admin.vo.GraphLinksVO;
@@ -37,4 +38,6 @@ public interface IClassificationService extends IService<Classification> {
     List<Classification> listAll();
 
     List<Classification> listChildren();
+
+    ClassVO listByNameLevel(String name, Integer level);
 }

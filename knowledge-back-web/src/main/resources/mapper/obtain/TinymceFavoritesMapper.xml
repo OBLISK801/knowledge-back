@@ -14,4 +14,8 @@
             tf.username = #{username}
             AND tf.status = 1
     </select>
+
+    <select id="getNum" resultType="int">
+        SELECT COUNT(*) num FROM tinymce_favorites WHERE tinymce_id = #{tinymceId} GROUP BY tinymce_id
+    </select>
 </mapper>
